@@ -1,0 +1,50 @@
+
+allprojects {
+    group = 'com.basebook'
+    version = '1.0.0'
+    repositories {
+        mavenCentral()
+    }
+
+}
+
+
+subprojects {
+
+
+    if (project.name != 'bom') {
+        apply plugin: 'java'
+
+        dependencies {
+            implementation platform(project(':bom'))
+            testAnnotationProcessor platform(project(':bom'))
+            annotationProcessor platform(project(':bom'))
+            compileOnly platform(project(':bom'))
+            testCompileOnly platform(project(':bom'))
+            testImplementation platform('org.junit:junit-bom:5.10.0')
+            testImplementation 'org.junit.jupiter:junit-jupiter'
+            annotationProcessor 'org.projectlombok:lombok'
+            compileOnly 'org.projectlombok:lombok'
+            testCompileOnly 'org.projectlombok:lombok'
+            testAnnotationProcessor 'org.projectlombok:lombok'
+        }
+
+
+
+        test {
+            useJUnitPlatform()
+        }
+    }
+
+//    dependencyManagement {
+//        dependencies {
+//            dependency 'org.springframework:spring-core:5.3.12'
+//            dependency 'org.springframework:spring-web:5.3.12'
+////        api 'com.fasterxml.jackson.core:jackson-databind:2.13.1'
+//            dependency 'org.slf4j:slf4j-api:1.7.32'
+//            dependency 'org.projectlombok:lombok:1.18.36'
+//        }
+//    }
+
+}
+
