@@ -9,12 +9,32 @@ javaPlatform {
 
 dependencies {
     constraints {
-        api 'org.springframework:spring-core:5.3.12'
-        api 'org.springframework:spring-web:5.3.12'
+        api 'org.springframework:spring-core:6.2.0'
+        api 'org.springframework:spring-web:6.2.0'
+        api 'org.springframework:spring-context:6.2.0'
+        api 'org.springframework:spring-webmvc:6.2.0'
         api 'org.slf4j:slf4j-api:1.7.32'
         api 'org.projectlombok:lombok:1.18.32'
         api 'org.postgresql:postgresql:42.7.4'
         api 'org.assertj:assertj-core:3.19.0'
         api 'net.datafaker:datafaker:2.4.2'
+        api 'org.thymeleaf:thymeleaf:3.1.2.RELEASE'
+        api 'org.thymeleaf:thymeleaf-spring6:3.1.2.RELEASE'
+        api 'javax.servlet:javax.servlet-api:4.0.1'
+        api 'org.springframework:spring-test:6.2.0'
+        api 'org.slf4j:slf4j-simple:2.0.9'
+    }
+}
+
+configurations.configureEach {
+    resolutionStrategy {
+        // Завершить сборку с ошибкой при конфликте версий
+        failOnVersionConflict()
+
+        // Заменить одну зависимость на другую
+        dependencySubstitution {
+            //substitute module('commons-logging:commons-logging') using module('org.slf4j:jcl-over-slf4j:1.7.36')
+        }
+
     }
 }

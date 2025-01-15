@@ -1,3 +1,7 @@
+plugins {
+    id 'java'
+}
+
 
 allprojects {
     group = 'com.basebook'
@@ -10,10 +14,13 @@ allprojects {
 
 
 subprojects {
-
-
     if (project.name != 'bom') {
         apply plugin: 'java'
+
+        java {
+            sourceCompatibility = JavaVersion.VERSION_21
+            targetCompatibility = JavaVersion.VERSION_21
+        }
 
         dependencies {
             implementation platform(project(':bom'))
@@ -29,6 +36,8 @@ subprojects {
             testAnnotationProcessor 'org.projectlombok:lombok'
             testImplementation 'org.assertj:assertj-core'
             testImplementation 'net.datafaker:datafaker'
+            implementation 'org.slf4j:slf4j-simple'
+            implementation 'org.slf4j:slf4j-api'
         }
 
 
@@ -38,15 +47,18 @@ subprojects {
         }
     }
 
-//    dependencyManagement {
-//        dependencies {
-//            dependency 'org.springframework:spring-core:5.3.12'
-//            dependency 'org.springframework:spring-web:5.3.12'
-////        api 'com.fasterxml.jackson.core:jackson-databind:2.13.1'
-//            dependency 'org.slf4j:slf4j-api:1.7.32'
-//            dependency 'org.projectlombok:lombok:1.18.36'
-//        }
-//    }
-
 }
+
+tasks.register('copyArtifacts', Copy) {
+    dependsOn subprojects.collect { it.tasks.matching { it.name == 'build' } }
+
+    from(subprojects.collect { it.buildDir }) {
+        include '**/*.jar'
+        include '**/*.war'
+    }
+    into "${rootDir}/lib"
+}
+
+build.dependsOn(copyArtifacts)
+
 

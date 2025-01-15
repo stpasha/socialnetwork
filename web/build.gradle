@@ -1,3 +1,14 @@
+apply {
+    plugin('war')
+}
+
 dependencies {
     implementation 'org.springframework:spring-web'
+    implementation 'org.springframework:spring-webmvc'
+    implementation project(':api')
+    implementation project(':service')
+    implementation 'org.thymeleaf:thymeleaf'
+    implementation 'org.thymeleaf:thymeleaf-spring6'
+    testImplementation 'org.springframework:spring-test'
+    providedRuntime 'javax.servlet:javax.servlet-api:4.0.1'
 }
