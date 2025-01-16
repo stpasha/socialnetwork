@@ -14,4 +14,6 @@ public class Comment {
     private Long postId;
     private String content;
     private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+    private boolean isDeleted;
 }

@@ -2,6 +2,7 @@ package com.basebook.model;
 
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -9,11 +10,17 @@ import java.util.List;
 @ToString
 @EqualsAndHashCode
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Post {
     private Long id;
     private String title;
     private String content;
-    private List<Tag> tags;  // Список тегов
-    private List<Like> likes;  // Список лайков
-    private List<Comment> comments;  // Список комментариев
+    private String imageUrl;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+    private boolean isDeleted;
+    private List<Tag> tags;
+    private List<Comment> comments;
+    private List<Like> likes;
 }
