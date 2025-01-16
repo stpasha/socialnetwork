@@ -25,10 +25,10 @@ CREATE TABLE post_tags (
 CREATE TABLE comments (
     comment_id SERIAL PRIMARY KEY,
     post_id INT NOT NULL,
-    content TEXT NOT NULL,
+    content VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    is_deleted BOOLEAN DEFAULT FALSE
+    is_deleted BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (post_id) REFERENCES posts(post_id) ON DELETE CASCADE
 );
 
@@ -36,6 +36,6 @@ CREATE TABLE likes (
     like_id SERIAL PRIMARY KEY,
     post_id INT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    is_deleted BOOLEAN DEFAULT FALSE
+    is_deleted BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (post_id) REFERENCES posts(post_id) ON DELETE CASCADE
 );

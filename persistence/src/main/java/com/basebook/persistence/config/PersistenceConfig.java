@@ -32,7 +32,7 @@ public class PersistenceConfig {
         String[] activeProfiles = env.getActiveProfiles();
         log.debug("Read profile number from properties {}", activeProfiles.length);
         String activeProfile = activeProfiles.length > 0 ? activeProfiles[0] : "test";
-        String profileFile = String.format("application-%s.properties", activeProfile);
+        String profileFile = String.format("classpath:application-%s.properties", activeProfile);
         Resource profileResource = rl.getResource(profileFile);
         Properties profileProperties = new Properties();
         try {

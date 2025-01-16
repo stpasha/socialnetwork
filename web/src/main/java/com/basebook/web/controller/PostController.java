@@ -26,9 +26,9 @@ public class PostController {
 
     @GetMapping
     public String listPosts(
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(required = false) String tag,
+            @RequestParam(value = "size", defaultValue = "10") int size,
+            @RequestParam(value = "page",defaultValue = "0") int page,
+            @RequestParam(value = "tag",required = false) String tag,
             Model model
     ) {
         int offset = page * size;
@@ -48,7 +48,7 @@ public class PostController {
     }
 
     @GetMapping("/{id}")
-    public String viewPost(@PathVariable Long id, Model model) {
+    public String viewPost(@PathVariable("id") Long id, Model model) {
         Post post = postService.get(id);
         if (post == null) {
             return "redirect:/posts";
@@ -72,13 +72,13 @@ public class PostController {
     }
 
     @PostMapping("/{id}/like")
-    public String likePost(@PathVariable Long id) {
+    public String likePost(@PathVariable("id") Long id) {
         //TODO Likes logic
         return "redirect:/posts/" + id;
     }
 
     @PostMapping("/{id}/comment")
-    public String addComment(@PathVariable Long id, @RequestParam String content) {
+    public String addComment(@PathVariable("id") Long id, @RequestParam("content") String content) {
         //TODO Add comment logic
         return "redirect:/posts/" + id;
     }

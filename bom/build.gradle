@@ -26,6 +26,8 @@ dependencies {
 
         // PostgreSQL Driver
         api 'org.postgresql:postgresql:42.7.4'
+        // H2 Driver
+        api'com.h2database:h2:2.3.230'
 
         // Testing
         api 'org.assertj:assertj-core:3.19.0'

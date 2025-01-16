@@ -38,7 +38,6 @@ subprojects {
             testImplementation 'net.datafaker:datafaker'
             implementation 'org.slf4j:slf4j-simple'
             implementation 'org.slf4j:slf4j-api'
-            implementation 'org.yaml:snakeyaml'
         }
 
 
