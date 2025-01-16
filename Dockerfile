@@ -8,6 +8,6 @@ COPY ./lib/libs/ /usr/local/tomcat/webapps/
 RUN mv /usr/local/tomcat/webapps/web-1.0.0.war /usr/local/tomcat/webapps/ROOT.war
 # Открываем порт 8080 для доступа
 EXPOSE 8080
-
+WORKDIR /usr/local/tomcat/bin
 # Стартуем Tomcat
 CMD ["catalina.sh", "run"]
