@@ -1,10 +1,10 @@
-package com.basebook.dao;
+package com.basebook.repository;
 
 import com.basebook.model.Tag;
 
 import java.util.List;
 
-public interface TagDAO {
+public interface TagRepository {
 
 
     void save(Tag tag);

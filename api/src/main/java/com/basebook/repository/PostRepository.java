@@ -1,16 +1,16 @@
-package com.basebook.dao;
+package com.basebook.repository;
 
 import com.basebook.model.Post;
 
 import java.util.List;
 
-public interface PostDAO {
+public interface PostRepository {
 
     void save(Post post);
 
     Post findById(long id);
 
-    List<Post> findAll();
+    List<Post> findAll(int limit, int offset);
 
     List<Post> findByTag(String tag);
 

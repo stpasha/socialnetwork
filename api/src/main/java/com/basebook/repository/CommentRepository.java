@@ -1,19 +1,16 @@
-package com.basebook.dao;
+package com.basebook.repository;
 
 import com.basebook.model.Comment;
 
 import java.util.List;
 
-public interface CommentDAO {
+public interface CommentRepository {
 
     void save(Comment comment);
 
     Comment findById(long id);
 
     List<Comment> findByPostId(long postId);
-
-
-    List<Comment> findAll();
 
     void update(Comment comment);
 
