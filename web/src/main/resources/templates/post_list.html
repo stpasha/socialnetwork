@@ -3,32 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <title>Post List</title>
+    <style>
+        .post-preview {
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .post-preview img {
+            max-width: 150px;
+            max-height: 150px;
+            display: block;
+            margin-bottom: 10px;
+        }
+        .tags span {
+            background-color: #f0f0f0;
+            padding: 5px;
+            margin-right: 5px;
+            border-radius: 3px;
+        }
+    </style>
 </head>
 <body>
 <h1>Post List</h1>
+
+<!-- Filter by Tag -->
 <div>
     <form action="/posts" method="get">
         <label for="tag">Filter by Tag:</label>
         <select name="tag" id="tag" onchange="this.form.submit()">
-            <option value="" th:selected="${selectedTag == null}">All</option>
+            <option value="" th:selected="${selectedTag == null}">-</option>
             <option th:each="tag : ${tags}" th:value="${tag.name}" th:text="${tag.name}" th:selected="${selectedTag == tag.name}"></option>
+        </select>
+
+        <label for="size">Posts per Page:</label>
+        <select name="size" id="size" onchange="this.form.submit()">
+            <option value="10" th:selected="${pageSize == 10}">10</option>
+            <option value="20" th:selected="${pageSize == 20}">20</option>
+            <option value="50" th:selected="${pageSize == 50}">50</option>
         </select>
     </form>
 </div>
+
+<!-- Post Previews -->
+<div th:each="post : ${posts}" class="post-preview">
+    <h2>
+        <a th:href="@{/posts/{id}(id=${post.id})}" th:text="${post.title}"></a>
+    </h2>
+    <img th:src="${post.imageUrl}" alt="Post Image">
+    <p th:utext="${#strings.abbreviate(post.content, 150)}"></p>
+    <p>Likes: <span th:text="${post.likesCount}"></span></p>
+    <p>Comments: <span th:text="${post.commentsCount}"></span></p>
+    <div class="tags">
+        <span th:each="tag : ${post.tags}" th:text="${tag.name}"></span>
+    </div>
+</div>
+
+<!-- Pagination -->
 <div>
-    <a href="/posts/new">Add New Post</a>
+    <a th:href="@{/posts(size=${pageSize}, page=${currentPage - 1}, tag=${selectedTag})}" th:if="${currentPage > 0}">Previous</a>
+    <a th:href="@{/posts(size=${pageSize}, page=${currentPage + 1}, tag=${selectedTag})}">Next</a>
 </div>
-<div th:each="post : ${posts}">
-    <h2><a th:href="@{/posts/{id}(id=${post.id})}" th:text="${post.title}"></a></h2>
-    <img th:src="${post.imageUrl}" alt="Post Image" style="max-width: 100px;">
-    <p th:text="${#strings.abbreviate(post.content, 100)}"></p>
-    <p>Likes: <span th:text="${#lists.size(post.likes)}"></span></p>
-    <p>Comments: <span th:text="${#lists.size(post.comments)}"></span></p>
-    <p th:each="tag : ${post.tags}" th:text="${tag.name}"></p>
-</div>
-<div>
-    <a th:href="@{/posts(size=10, page=${currentPage - 1})}" th:if="${currentPage > 0}">Previous</a>
-    <a th:href="@{/posts(size=10, page=${currentPage + 1})}">Next</a>
-</div>
+
 </body>
 </html>

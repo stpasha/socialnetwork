@@ -2,18 +2,38 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Post Detail</title>
+    <title th:text="${post.title}">Post Detail</title>
+    <style>
+        .tags span {
+            background-color: #f0f0f0;
+            padding: 5px;
+            margin-right: 5px;
+            border-radius: 3px;
+        }
+    </style>
 </head>
 <body>
 <h1 th:text="${post.title}"></h1>
 <img th:src="${post.imageUrl}" alt="Post Image">
-<p th:each="content : ${#strings.split(post.content, '\n')}" th:text="${content}"></p>
-<p th:each="tag : ${post.tags}" th:text="${tag.name}"></p>
-<a th:href="@{/posts/{id}/edit(id=${post.id})}">Edit</a>
-<a th:href="@{/posts/{id}/delete(id=${post.id})}">Delete</a>
-<form action="/posts/{id}/like" method="post">
-    <button type="submit">Like</button>
+<div>
+    <p th:each="paragraph : ${#strings.split(post.content, '\n')}" th:text="${paragraph}"></p>
+</div>
+<div class="tags">
+    <span th:each="tag : ${post.tags}" th:text="${tag.name}"></span>
+</div>
+
+<!-- Edit/Delete -->
+<div>
+    <a th:href="@{/posts/{id}/edit(id=${post.id})}">Edit Post</a>
+    <a th:href="@{/posts/{id}/delete(id=${post.id})}">Delete Post</a>
+</div>
+
+<!-- Like Post -->
+<form th:action="@{/posts/{id}/like(id=${post.id})}" method="post">
+    <button type="submit">Like</button> (<span th:text="${post.likesCount}"></span>)
 </form>
+
+<!-- Comments -->
 <h2>Comments</h2>
 <ul>
     <li th:each="comment : ${post.comments}">
@@ -22,9 +42,12 @@
         <a th:href="@{/comments/{id}/delete(id=${comment.id})}">Delete</a>
     </li>
 </ul>
-<form action="/posts/{id}/comment" method="post">
-    <textarea name="content" required></textarea>
+
+<!-- Add Comment -->
+<form th:action="@{/posts/{id}/comment(id=${post.id})}" method="post">
+    <textarea name="content" rows="3" required></textarea>
     <button type="submit">Add Comment</button>
 </form>
+
 </body>
 </html>

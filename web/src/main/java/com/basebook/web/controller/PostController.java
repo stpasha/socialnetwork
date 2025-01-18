@@ -27,14 +27,12 @@ public class PostController {
     @GetMapping
     public String listPosts(
             @RequestParam(value = "size", defaultValue = "10") int size,
-            @RequestParam(value = "page",defaultValue = "0") int page,
-            @RequestParam(value = "tag",required = false) String tag,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "tag", defaultValue = "-", required = false) String tag,
             Model model
     ) {
         int offset = page * size;
-        List<Post> posts = tag == null
-                ? postService.listPosts(size, offset)
-                : postService.getByTag(tag);
+        List<Post> posts = postService.listPosts(size, offset, tag);
 
         List<Tag> allTags = tagService.getAll();
 
