@@ -20,10 +20,10 @@ public class DefaultPostService implements PostService {
         return postRepository.findById(id);
     }
 
-    @Override
-    public List<Post> getByTag(String name) {
-        return postRepository.findByTag(name);
-    }
+//    @Override
+//    public List<Post> getByTag(String name) {
+//        return postRepository.findByTag(name);
+//    }
 
     @Override
     public void create(Post post) {
@@ -36,7 +36,7 @@ public class DefaultPostService implements PostService {
     }
 
     @Override
-    public List<Post> listPosts(int limit, int offset) {
-        return postRepository.findAll(limit, offset);
+    public List<Post> listPosts(int limit, int offset, String filter) {
+        return postRepository.findAll(limit, offset, filter);
     }
 }

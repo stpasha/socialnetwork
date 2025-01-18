@@ -10,9 +10,9 @@ public interface PostRepository {
 
     Post findById(long id);
 
-    List<Post> findAll(int limit, int offset);
+    List<Post> findAll(int limit, int offset, String filter);
 
-    List<Post> findByTag(String tag);
+//    List<Post> findByTag(String tag);
 
     void update(Post post);
 

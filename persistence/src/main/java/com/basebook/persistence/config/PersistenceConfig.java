@@ -25,7 +25,8 @@ import java.util.Properties;
 @Slf4j
 public class PersistenceConfig {
 
-    public static final String SCHEMA_SQL = "schema.sql";
+    private static final String SCHEMA_SQL = "schema.sql";
+    private static final String TESTDATA_SQL = "testdata.sql";
 
     @Bean
     public DataSource dataSource(Environment env, ResourceLoader rl) {
@@ -37,7 +38,7 @@ public class PersistenceConfig {
         Properties profileProperties = new Properties();
         try {
             profileProperties.load(profileResource.getInputStream());
-            String databaseDriver = profileProperties.getProperty("spring.datasource.driver");
+            String databaseDriver = profileProperties.getProperty("spring.datasource.driver-class-name");
             String url = profileProperties.getProperty("spring.datasource.url");
             String username = profileProperties.getProperty("spring.datasource.username");
             String password = profileProperties.getProperty("spring.datasource.password");
@@ -71,7 +72,7 @@ public class PersistenceConfig {
         log.info("Start of schema deployment time {}", new Timestamp(event.getTimestamp()).toInstant());
         DataSource dataSource = event.getApplicationContext().getBean(DataSource.class);
         ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
-        populator.addScript(new ClassPathResource(SCHEMA_SQL)); // Файл должен находится в ресурсах
+        populator.addScripts(new ClassPathResource(SCHEMA_SQL), new ClassPathResource(TESTDATA_SQL)); // Файл должен находится в ресурсах
         populator.execute(dataSource);
         log.info("End of schema deployment time {}", Instant.now());
     }
