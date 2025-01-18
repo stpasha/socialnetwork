@@ -10,7 +10,7 @@ import java.util.List;
 @ToString
 @EqualsAndHashCode
 @Builder
-//@NoArgsConstructor
+@NoArgsConstructor
 @AllArgsConstructor
 public class Post {
     private Long id;
@@ -46,13 +46,5 @@ public class Post {
             }
         }
         return commentsCount;
-    }
-
-    public void setLikesCount(Integer likesCount) {
-        this.likesCount = likesCount;
-    }
-
-    public void setCommentsCount(Integer commentsCount) {
-        this.commentsCount = commentsCount;
     }
 }

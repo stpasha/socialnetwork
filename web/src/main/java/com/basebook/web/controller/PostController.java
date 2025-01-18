@@ -56,13 +56,6 @@ public class PostController {
         return "post_detail";
     }
 
-//    @GetMapping("/new")
-//    public String newPostForm(Model model) {
-//        model.addAttribute("post", new Post());
-//        model.addAttribute("tags", tagService.getAll());
-//        return "post_form";
-//    }
-
     @PostMapping
     public String createPost(@ModelAttribute Post post) {
         postService.create(post);

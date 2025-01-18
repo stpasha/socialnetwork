@@ -1,6 +1,8 @@
 package com.basebook.web.config;
 
+import com.basebook.service.TagService;
 import com.basebook.service.config.ServiceConfig;
+import com.basebook.web.converter.StringToTagConverter;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -14,6 +16,17 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @ComponentScan(basePackages = "com.basebook.web")
 @Import(ServiceConfig.class)
 public class WebConfig implements WebMvcConfigurer {
+
+    private final StringToTagConverter stringToTagConverter;
+
+    public WebConfig(StringToTagConverter stringToTagConverter) {
+        this.stringToTagConverter = stringToTagConverter;
+    }
+
+    @Override
+    public void addFormatters(org.springframework.format.FormatterRegistry registry) {
+        registry.addConverter(stringToTagConverter); // Регистрация конвертера
+    }
 
 
     @Override

@@ -61,4 +61,8 @@ tasks.register('copyArtifacts', Copy) {
 
 build.dependsOn(copyArtifacts)
 
+tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs << "-parameters"
+}
+
 

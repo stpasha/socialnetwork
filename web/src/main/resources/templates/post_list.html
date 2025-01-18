@@ -23,17 +23,40 @@
             border-radius: 3px;
         }
     </style>
+    <script src="/static/scripts.js"></script>
 </head>
 <body>
 <h1>Post List</h1>
 
 <!-- Filter by Tag -->
 <div>
+
+    <button class="btn-add" onclick="toggleForm()">Post your topic</button>
+    <div class="form-container" style="display: none;" id="postForm">
+        <h2>Post your topic</h2>
+        <form th:action="@{/posts}" th:object="${post}" method="POST">
+            <label for="title">Title:</label>
+            <input type="text" id="title" name="title" required/>
+
+            <label for="content">Content:</label>
+            <input type="text" id="content" name="content" required/>
+
+            <label for="image">Image URL:</label>
+            <input type="text" id="image" name="imageUrl"/>
+
+            <label for="tags">Tags:</label>
+            <select name="tags" id="tags" multiple>
+                <option th:each="tag : ${tags}" th:value="${tag.id}" th:text="${tag.name}"></option>
+            </select>
+
+            <button type="submit">Add a post</button>
+        </form>
+    </div>
     <form action="/posts" method="get">
         <label for="tag">Filter by Tag:</label>
         <select name="tag" id="tag" onchange="this.form.submit()">
             <option value="" th:selected="${selectedTag == null}">-</option>
-            <option th:each="tag : ${tags}" th:value="${tag.name}" th:text="${tag.name}" th:selected="${selectedTag == tag.name}"></option>
+            <option th:each="tag : ${tags}" th:value="${tag.id}" th:text="${tag.name}" th:selected="${selectedTag == tag.name}"></option>
         </select>
 
         <label for="size">Posts per Page:</label>

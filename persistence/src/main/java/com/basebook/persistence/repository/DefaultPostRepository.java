@@ -44,70 +44,70 @@ public class DefaultPostRepository implements PostRepository {
     @Override
     public List<Post> findAll(int limit, int offset, String filter) {
         String sql;
-        if(EMPTY_TAG.equals(filter)) {
+        if (EMPTY_TAG.equals(filter)) {
             sql =
                     """
-                    SELECT 
-                        p.post_id,
-                        p.title,
-                        p.content,
-                        p.image_url,
-                        p.created_at,
-                        p.updated_at,
-                        p.is_deleted,
-                        l.lcount, 
-                        c.ccount
-                    FROM posts p
-                        LEFT JOIN (
-                            SELECT l.post_id, COUNT(l.like_id) AS lcount
-                            FROM likes l
-                            GROUP BY l.post_id
-                        ) l ON p.post_id = l.post_id
-                        LEFT JOIN (
-                            SELECT c.post_id, COUNT(c.comment_id) AS ccount
-                            FROM comments c
-                            GROUP BY c.post_id
-                        ) c ON p.post_id = c.post_id
-                    ORDER BY p.created_at DESC
-                    LIMIT ? OFFSET ?
+                            SELECT
+                                p.post_id,
+                                p.title,
+                                p.content,
+                                p.image_url,
+                                p.created_at,
+                                p.updated_at,
+                                p.is_deleted,
+                                l.lcount,
+                                c.ccount
+                            FROM posts p
+                                LEFT JOIN (
+                                    SELECT l.post_id, COUNT(l.like_id) AS lcount
+                                    FROM likes l
+                                    GROUP BY l.post_id
+                                ) l ON p.post_id = l.post_id
+                                LEFT JOIN (
+                                    SELECT c.post_id, COUNT(c.comment_id) AS ccount
+                                    FROM comments c
+                                    GROUP BY c.post_id
+                                ) c ON p.post_id = c.post_id
+                            ORDER BY p.created_at DESC
+                            LIMIT ? OFFSET ?
                     """;
             return jdbcTemplate.query(sql, postRowMapper, limit, offset);
         } else {
             sql =
                     """
-                    SELECT 
-                        p.post_id,
-                        p.title,
-                        p.content,
-                        p.image_url,
-                        p.created_at,
-                        p.updated_at,
-                        p.is_deleted,
-                        l.lcount, 
-                        c.ccount
-                    FROM posts p
-                        LEFT JOIN (
-                            SELECT l.post_id, COUNT(l.like_id) AS lcount
-                            FROM likes l
-                            GROUP BY l.post_id
-                        ) l ON 
-                            p.post_id = l.post_id
-                        LEFT JOIN (
-                            SELECT c.post_id, COUNT(c.comment_id) AS ccount
-                            FROM comments c
-                            GROUP BY c.post_id
-                        ) c ON 
-                            p.post_id = c.post_id
-                        INNER JOIN 
-                            post_tags pt 
-                        ON 
-                            p.post_id = pt.post_id 
-                        INNER JOIN tags t 
-                        ON 
-                            pt.tag_id = t.tag_id 
-                        WHERE t.name = ?
-                    ORDER BY p.created_at DESC
-                    LIMIT ? OFFSET ?
+                            SELECT
+                                p.post_id,
+                                p.title,
+                                p.content,
+                                p.image_url,
+                                p.created_at,
+                                p.updated_at,
+                                p.is_deleted,
+                                l.lcount,
+                                c.ccount
+                            FROM posts p
+                                LEFT JOIN (
+                                    SELECT l.post_id, COUNT(l.like_id) AS lcount
+                                    FROM likes l
+                                    GROUP BY l.post_id
+                                ) l ON
+                                    p.post_id = l.post_id
+                                LEFT JOIN (
+                                    SELECT c.post_id, COUNT(c.comment_id) AS ccount
+                                    FROM comments c
+                                    GROUP BY c.post_id
+                                ) c ON
+                                    p.post_id = c.post_id
+                                INNER JOIN
+                                    post_tags pt
+                                ON
+                                    p.post_id = pt.post_id
+                                INNER JOIN tags t
+                                ON
+                                    pt.tag_id = t.tag_id
+                                WHERE t.name = ?
+                            ORDER BY p.created_at DESC
+                            LIMIT ? OFFSET ?
                     """;
             return jdbcTemplate.query(sql, postRowMapper, filter, limit, offset);
         }
