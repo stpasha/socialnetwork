@@ -4,6 +4,7 @@ import com.basebook.model.Post;
 import com.basebook.repository.PostRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -27,6 +28,7 @@ public class DefaultPostService implements PostService {
 
     @Override
     public void create(Post post) {
+        post.setCreatedAt(LocalDateTime.now());
         postRepository.save(post);
     }
 

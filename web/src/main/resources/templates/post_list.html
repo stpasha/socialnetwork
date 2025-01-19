@@ -56,7 +56,7 @@
         <label for="tag">Filter by Tag:</label>
         <select name="tag" id="tag" onchange="this.form.submit()">
             <option value="" th:selected="${selectedTag == null}">-</option>
-            <option th:each="tag : ${tags}" th:value="${tag.id}" th:text="${tag.name}" th:selected="${selectedTag == tag.name}"></option>
+            <option th:each="tag : ${tags}" th:value="${tag.name}" th:text="${tag.name}" th:selected="${selectedTag == tag.name}"></option>
         </select>
 
         <label for="size">Posts per Page:</label>

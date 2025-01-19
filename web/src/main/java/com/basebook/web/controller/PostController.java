@@ -2,13 +2,17 @@ package com.basebook.web.controller;
 
 import com.basebook.model.Post;
 import com.basebook.model.Tag;
+import com.basebook.service.ImageService;
 import com.basebook.service.PostService;
 import com.basebook.service.TagService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 
 @Controller
@@ -18,10 +22,12 @@ public class PostController {
 
     private final PostService postService;
     private final TagService tagService;
+    private final ImageService imageService;
 
-    public PostController(PostService postService, TagService tagService) {
+    public PostController(PostService postService, TagService tagService, ImageService imageService) {
         this.postService = postService;
         this.tagService = tagService;
+        this.imageService = imageService;
     }
 
     @GetMapping
@@ -57,7 +63,14 @@ public class PostController {
     }
 
     @PostMapping
-    public String createPost(@ModelAttribute Post post) {
+    public String createPost(@ModelAttribute Post post, @RequestParam("image") MultipartFile imageFile) {
+        if (!imageFile.isEmpty()) {
+            try {
+                post.setImageUrl(imageService.saveImage(imageFile.getOriginalFilename(), imageFile.getBytes()));
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to save image", e);
+            }
+        }
         postService.create(post);
         return "redirect:/posts";
     }

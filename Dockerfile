@@ -2,6 +2,8 @@ FROM tomcat:10.1-jdk21
 # Устанавливаем параметры запуска
 ENV JAVA_OPTS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:8000"
 # Устанавливаем рабочую директорию
+WORKDIR /usr/local/tomcat/work/Catalina/localhost/ROOT
+RUN mkdir -p uploads/tmp
 WORKDIR /usr/local/tomcat/webapps
 
 # Копируем ваш WAR файл в контейнер
