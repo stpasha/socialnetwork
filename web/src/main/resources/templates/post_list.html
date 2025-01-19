@@ -34,20 +34,20 @@
     <button class="btn-add" onclick="toggleForm()">Post your topic</button>
     <div class="form-container" style="display: none;" id="postForm">
         <h2>Post your topic</h2>
-        <form th:action="@{/posts}" th:object="${post}" method="POST">
+        <form th:action="@{/posts}" th:object="${post}" method="POST" enctype="multipart/form-data">
             <label for="title">Title:</label>
             <input type="text" id="title" name="title" required/>
 
             <label for="content">Content:</label>
-            <input type="text" id="content" name="content" required/>
-
-            <label for="image">Image URL:</label>
-            <input type="text" id="image" name="imageUrl"/>
+            <textarea id="content" name="content" required></textarea>
 
             <label for="tags">Tags:</label>
             <select name="tags" id="tags" multiple>
                 <option th:each="tag : ${tags}" th:value="${tag.id}" th:text="${tag.name}"></option>
             </select>
+
+            <label for="image">Upload Image:</label>
+            <input type="file" id="image" name="image" accept="image/png, image/jpeg"/>
 
             <button type="submit">Add a post</button>
         </form>
