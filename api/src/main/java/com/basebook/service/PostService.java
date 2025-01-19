@@ -3,9 +3,10 @@ package com.basebook.service;
 import com.basebook.model.Post;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface PostService {
-    Post get(Long id);
+    Optional<Post> get(Long id);
 
 //    List<Post> getByTag(String name);
 

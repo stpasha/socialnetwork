@@ -1,12 +1,17 @@
 package com.basebook.persistence.repository;
 
+import com.basebook.model.Comment;
+import com.basebook.model.Like;
 import com.basebook.model.Post;
 import com.basebook.repository.PostRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Repository
 public class DefaultPostRepository implements PostRepository {
@@ -18,17 +23,93 @@ public class DefaultPostRepository implements PostRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private final RowMapper<Post> postRowMapper = (rs, rowNum) -> Post.builder()
+    private final RowMapper<Post> postRowMapper = (rs, rowNum) -> {
+        Post post = Post.builder()
             .id(rs.getLong("post_id"))
             .title(rs.getString("title"))
             .content(rs.getString("content"))
             .imageUrl(rs.getString("image_url"))
-            .createdAt(rs.getTimestamp("created_at").toLocalDateTime())
-            .updatedAt(rs.getTimestamp("updated_at").toLocalDateTime())
             .isDeleted(rs.getBoolean("is_deleted"))
             .commentsCount(rs.getInt("ccount"))
             .likesCount(rs.getInt("lcount"))
             .build();
+        if (rs.getTimestamp("created_at") != null) {
+            post.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+        }
+        if (rs.getTimestamp("updated_at") != null) {
+            post.setUpdatedAt(rs.getTimestamp("updated_at").toLocalDateTime());
+        }
+        return post;
+    };
+
+    private final RowMapper<Post> oneRowMapper = (rs, rowNum) -> {
+        Post post = null;
+        Set<Comment> comments = new HashSet<>();
+        Set<Like> likes = new HashSet<>();
+        do {
+            if (post == null) {
+                post = Post.builder()
+                        .id(rs.getLong("post_id"))
+                        .title(rs.getString("title"))
+                        .content(rs.getString("content"))
+                        .imageUrl(rs.getString("image_url"))
+                        .isDeleted(rs.getBoolean("is_deleted"))
+                        .build();
+                if (rs.getTimestamp("created_at") != null) {
+                    post.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+                }
+                if (rs.getTimestamp("updated_at") != null) {
+                    post.setUpdatedAt(rs.getTimestamp("updated_at").toLocalDateTime());
+                }
+            }
+
+            if (rs.getObject("like_id") != null) {
+                Like like = mapLike(rs);
+                if (like != null) {
+                    likes.add(like);
+                }
+            }
+            if (rs.getObject("comment_id") != null) {
+                Comment comment = mapComment(rs);
+                if (comment != null) {
+                    comments.add(comment);
+                }
+            }
+
+        } while (rs.next());
+        post.setLikes(likes.stream().toList());
+        post.setComments(comments.stream().toList());
+
+        return post;
+    };
+
+    private Like mapLike(ResultSet rs) throws SQLException {
+        return Like.builder()
+                .postId(rs.getLong("post_id"))
+                .id(rs.getLong("like_id"))
+                .createdAt(rs.getTimestamp("lcreated_at").toLocalDateTime())
+                .isDeleted(rs.getBoolean("lis_deleted"))
+                .build();
+    }
+
+    private Comment mapComment(ResultSet rs) throws SQLException {
+        Comment comment = Comment.builder()
+                .postId(rs.getLong("post_id"))
+                .id(rs.getLong("comment_id"))
+                .content(rs.getString("ccontent"))
+                .isDeleted(rs.getBoolean("cis_deleted"))
+                .build();
+
+        if (rs.getTimestamp("ccreated_at") != null) {
+            comment.setCreatedAt(rs.getTimestamp("ccreated_at").toLocalDateTime());
+        }
+
+        if (rs.getTimestamp("cupdated_at") != null) {
+            comment.setUpdatedAt(rs.getTimestamp("cupdated_at").toLocalDateTime());
+        }
+
+        return comment;
+    }
 
     @Override
     public void save(Post post) {
@@ -37,8 +118,30 @@ public class DefaultPostRepository implements PostRepository {
     }
 
     @Override
-    public Post findById(long id) {
-        return jdbcTemplate.queryForObject("SELECT * FROM posts WHERE post_id = ?", postRowMapper, id);
+    public Optional <Post> findById(long id) {
+        return jdbcTemplate.query(
+                """
+                        SELECT
+                            p.post_id,
+                            p.title,
+                            p.content,
+                            p.image_url,
+                            p.created_at,
+                            p.updated_at,
+                            p.is_deleted,
+                            l.like_id,
+                            l.created_at AS lcreated_at,
+                            l.is_deleted AS lis_deleted,
+                            c.comment_id,
+                            c.content AS ccontent,
+                            c.created_at AS ccreated_at,
+                            c.updated_at AS cupdated_at,
+                            c.is_deleted AS cis_deleted
+                        FROM posts p
+                            INNER JOIN likes l ON p.post_id = l.post_id
+                            INNER JOIN comments c ON p.post_id = c.post_id
+                        WHERE p.post_id = ?
+                        """, oneRowMapper, id).stream().findFirst();
     }
 
     @Override
@@ -58,12 +161,12 @@ public class DefaultPostRepository implements PostRepository {
                                 l.lcount,
                                 c.ccount
                             FROM posts p
-                                LEFT JOIN (
+                                INNER JOIN (
                                     SELECT l.post_id, COUNT(l.like_id) AS lcount
                                     FROM likes l
                                     GROUP BY l.post_id
                                 ) l ON p.post_id = l.post_id
-                                LEFT JOIN (
+                                INNER JOIN (
                                     SELECT c.post_id, COUNT(c.comment_id) AS ccount
                                     FROM comments c
                                     GROUP BY c.post_id

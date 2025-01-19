@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class DefaultPostService implements PostService {
@@ -17,7 +18,7 @@ public class DefaultPostService implements PostService {
     }
 
     @Override
-    public Post get(Long id) {
+    public Optional<Post> get(Long id) {
         return postRepository.findById(id);
     }
 

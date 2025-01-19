@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Path;
 import java.util.List;
 
 @Controller
@@ -53,13 +52,10 @@ public class PostController {
 
     @GetMapping("/{id}")
     public String viewPost(@PathVariable("id") Long id, Model model) {
-        Post post = postService.get(id);
-        if (post == null) {
-            return "redirect:/posts";
-        }
-
-        model.addAttribute("post", post);
-        return "post_detail";
+        return postService.get(id).map(post -> {
+            model.addAttribute("post", post);
+            return "post_detail";
+        }).orElse("redirect:/posts");
     }
 
     @PostMapping
