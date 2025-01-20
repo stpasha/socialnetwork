@@ -46,12 +46,14 @@ public class PostController {
         model.addAttribute("selectedTag", tag);
         model.addAttribute("currentPage", page);
         model.addAttribute("pageSize", size);
-
+        log.info("Listing post with parameters posts {} tags {} selected tag {} pagenum {} size {}", posts.toArray(), allTags.toArray(), tag, page, size);
         return "post_list";
     }
 
     @GetMapping("/{id}")
-    public String viewPost(@PathVariable("id") Long id, Model model) {
+    public String viewPost(@PathVariable("id") Long id,
+                           Model model) {
+        log.info("View post: {}", id);
         return postService.get(id).map(post -> {
             model.addAttribute("post", post);
             return "post_detail";
@@ -59,10 +61,13 @@ public class PostController {
     }
 
     @PostMapping
-    public String createPost(@ModelAttribute Post post, @RequestParam("image") MultipartFile imageFile) {
+    public String createPost(@ModelAttribute Post post,
+                             @RequestParam("image") MultipartFile imageFile) {
+        log.info("Start post creation: {}", post);
         if (!imageFile.isEmpty()) {
             try {
                 post.setImageUrl(imageService.saveImage(imageFile.getOriginalFilename(), imageFile.getBytes()));
+                log.info("Image saved {}", post.getImageUrl());
             } catch (IOException e) {
                 throw new RuntimeException("Failed to save image", e);
             }
@@ -71,15 +76,31 @@ public class PostController {
         return "redirect:/posts";
     }
 
-    @PostMapping("/{id}/like")
-    public String likePost(@PathVariable("id") Long id) {
-        //TODO Likes logic
-        return "redirect:/posts/" + id;
+    @PostMapping("/edit/")
+    public String edit(@ModelAttribute Post post,
+                       @RequestParam("image") MultipartFile imageFile) {
+        if (!imageFile.isEmpty()) {
+            try {
+                post.setImageUrl(imageService.saveImage(imageFile.getOriginalFilename(), imageFile.getBytes()));
+                log.info("Image updated {}", post.getImageUrl());
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to save image", e);
+            }
+        }
+        postService.update(post);
+        return "redirect:/posts/" + post.getId();
     }
 
-    @PostMapping("/{id}/comment")
-    public String addComment(@PathVariable("id") Long id, @RequestParam("content") String content) {
-        //TODO Add comment logic
-        return "redirect:/posts/" + id;
+    @PostMapping("{id}/delete")
+    public String delete(@PathVariable("id") Long id) {
+        return postService.get(id).map(post -> {
+            postService.delete(post.getId());
+            log.info("Correct delete {}", id);
+            return "redirect:/posts";
+        }).orElseGet(() -> {
+            log.info("Invalid delete {}", id);
+            return "redirect:/posts";
+        });
     }
+
 }

@@ -12,6 +12,8 @@ public interface PostService {
 
     void create(Post post);
 
+    void update(Post post);
+
     void delete(Long id);
 
     List<Post> listPosts(int limit, int offset, String filter);

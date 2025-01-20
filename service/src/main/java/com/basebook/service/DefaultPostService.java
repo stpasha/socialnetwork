@@ -34,6 +34,12 @@ public class DefaultPostService implements PostService {
     }
 
     @Override
+    public void update(Post post) {
+        post.setUpdatedAt(LocalDateTime.now());
+        postRepository.update(post);
+    }
+
+    @Override
     public void delete(Long id) {
         postRepository.delete(id);
     }

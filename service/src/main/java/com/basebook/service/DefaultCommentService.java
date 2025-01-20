@@ -32,6 +32,11 @@ public class DefaultCommentService implements CommentService {
     }
 
     @Override
+    public void update(Comment comment) {
+        commentRepository.update(comment);
+    }
+
+    @Override
     public List<Comment> getCommentsByPost(Long postId) {
         return commentRepository.findByPostId(postId);
     }

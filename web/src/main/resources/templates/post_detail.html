@@ -10,6 +10,17 @@
             margin-right: 5px;
             border-radius: 3px;
         }
+        .editable-textarea[readonly] {
+            background-color: transparent;
+            border: none;
+            resize: none;
+            cursor: pointer;
+        }
+        .editable-textarea:focus {
+            outline: 1px solid #007BFF;
+            cursor: text;
+        }
+
     </style>
 </head>
 <body>
@@ -22,14 +33,33 @@
     <span th:each="tag : ${post.tags}" th:text="${tag.name}"></span>
 </div>
 
-<!-- Edit/Delete -->
+<button class="btn-add" onclick="toggleForm()">Edit your topic</button>
+<div class="form-container" style="display: none;" id="postForm">
+    <h2>Edit your topic</h2>
+    <form th:action="@{/posts/edit/}" th:object="${post}" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="id" th:value="${post.id}" />
+        <label for="title">Title:</label>
+        <input type="text" id="title" name="title" required th:value="${post.title}"/>
+
+        <label for="content">Content:</label>
+        <textarea id="content" name="content" required th:text="${post.content}"></textarea>
+
+        <label for="image">Upload Image:</label>
+        <input type="file" id="image" name="image" accept="image/png, image/jpeg"/>
+
+        <button type="submit">Edit a post</button>
+    </form>
+</div>
+
+
 <div>
-    <a th:href="@{/posts/{id}/edit(id=${post.id})}">Edit Post</a>
-    <a th:href="@{/posts/{id}/delete(id=${post.id})}">Delete Post</a>
+    <form th:action="@{/posts/{id}/delete(id=${post.id})}"  method="post" enctype="multipart/form-data">
+        <button type="submit">Delete Post</button>
+    </form>
 </div>
 
 <!-- Like Post -->
-<form th:action="@{/posts/{id}/like(id=${post.id})}" method="post">
+<form th:action="@{/likes/{id}/post(id=${post.id})}" method="post">
     <button type="submit">Like</button> (<span th:text="${post.likesCount}"></span>)
 </form>
 
@@ -37,17 +67,31 @@
 <h2>Comments</h2>
 <ul>
     <li th:each="comment : ${post.comments}">
-        <p th:text="${comment.content}"></p>
-        <a th:href="@{/comments/{id}/edit(id=${comment.id})}">Edit</a>
-        <a th:href="@{/comments/{id}/delete(id=${comment.id})}">Delete</a>
+        <form th:action="@{/comments/{id}/edit(id=${comment.id})}" method="post">
+            <!-- Readonly textarea by default -->
+            <textarea
+                    class="editable-textarea"
+                    name="content"
+                    rows="2"
+                    required
+                    th:text="${comment.content}"
+                    readonly></textarea>
+            <input type="hidden" name="postId" th:value="${post.id}" />
+        </form>
+        <!-- Delete comment -->
+        <form th:action="@{/comments/{id}/delete(id=${comment.id})}" method="post" style="display:inline;">
+            <input type="hidden" name="postId" th:value="${post.id}" />
+            <button type="submit">Delete</button>
+        </form>
     </li>
 </ul>
 
 <!-- Add Comment -->
-<form th:action="@{/posts/{id}/comment(id=${post.id})}" method="post">
+<form th:action="@{/comments/{postId}(postId=${post.id})}" method="post">
     <textarea name="content" rows="3" required></textarea>
     <button type="submit">Add Comment</button>
 </form>
 
+<script src="/static/scripts.js"></script>
 </body>
 </html>
