@@ -22,13 +22,27 @@
             margin-right: 5px;
             border-radius: 3px;
         }
+        figure {
+              border: 1px solid #245488;
+              padding: 10px;
+              min-width: 250px;
+        }
+
+        figcaption {
+          text-align: center;
+          background-color: #bac8d6;
+        }
+
+        img {
+          width: 100%;
+        }
+
     </style>
     <script src="/static/scripts.js"></script>
 </head>
 <body>
 <h1>Post List</h1>
 
-<!-- Filter by Tag -->
 <div>
 
     <button class="btn-add" onclick="toggleForm()">Post your topic</button>
@@ -75,8 +89,17 @@
     </h2>
     <img th:src="${post.imageUrl}" alt="Post Image">
     <p th:utext="${#strings.abbreviate(post.content, 150)}"></p>
-    <p>Likes: <span th:text="${post.likesCount}"></span></p>
-    <p>Comments: <span th:text="${post.commentsCount}"></span></p>
+
+    <figure>
+        <figcaption th:text="${post.likesCount}"></figcaption>
+        <img src="/static/like.png" loading="lazy" alt="Like:" width="40" height="40"/>
+    </figure>
+
+    <figure>
+        <figcaption th:text="${post.commentsCount}"></figcaption>
+        <img src="/static/comment.png" loading="lazy" alt="Comment:" width="40" height="40"/>
+    </figure>
+
     <div class="tags">
         <span th:each="tag : ${post.tags}" th:text="${tag.name}"></span>
     </div>
@@ -85,8 +108,11 @@
 <!-- Pagination -->
 <div>
     <a th:href="@{/posts(size=${pageSize}, page=${currentPage - 1}, tag=${selectedTag})}" th:if="${currentPage > 0}">Previous</a>
-    <a th:href="@{/posts(size=${pageSize}, page=${currentPage + 1}, tag=${selectedTag})}">Next</a>
+    <a th:href="@{/posts(size=${pageSize}, page=${currentPage + 1}, tag=${selectedTag})}"
+       th:if="${#lists.size(posts) >= pageSize}">Next</a>
 </div>
 
+<a target="_blank" style="visibility: hidden;" href="https://icons8.com/icon/zBo74alYhrHK/speech-bubble">Speech Bubble</a> иконка от <a target="_blank" href="https://icons8.com">Icons8</a>
+<a target="_blank" style="visibility : hidden" href="https://icons8.com/icon/42030/love">Лайк с заливкой</a> иконка от <a target="_blank" href="https://icons8.com">Icons8</a>
 </body>
 </html>

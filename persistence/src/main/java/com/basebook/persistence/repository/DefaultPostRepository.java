@@ -138,8 +138,8 @@ public class DefaultPostRepository implements PostRepository {
                             c.updated_at AS cupdated_at,
                             c.is_deleted AS cis_deleted
                         FROM posts p
-                            INNER JOIN likes l ON p.post_id = l.post_id
-                            INNER JOIN comments c ON p.post_id = c.post_id
+                            LEFT JOIN likes l ON p.post_id = l.post_id
+                            LEFT JOIN comments c ON p.post_id = c.post_id
                         WHERE p.post_id = ?
                         """, oneRowMapper, id).stream().findFirst();
     }
@@ -161,12 +161,12 @@ public class DefaultPostRepository implements PostRepository {
                                 l.lcount,
                                 c.ccount
                             FROM posts p
-                                INNER JOIN (
+                                LEFT JOIN (
                                     SELECT l.post_id, COUNT(l.like_id) AS lcount
                                     FROM likes l
                                     GROUP BY l.post_id
                                 ) l ON p.post_id = l.post_id
-                                INNER JOIN (
+                                LEFT JOIN (
                                     SELECT c.post_id, COUNT(c.comment_id) AS ccount
                                     FROM comments c
                                     GROUP BY c.post_id
