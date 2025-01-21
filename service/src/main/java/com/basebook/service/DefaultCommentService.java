@@ -17,11 +17,6 @@ public class DefaultCommentService implements CommentService {
     }
 
     @Override
-    public Comment get(Long id) {
-        return commentRepository.findById(id);
-    }
-
-    @Override
     public void create(Comment comment) {
         commentRepository.save(comment);
     }
@@ -36,8 +31,4 @@ public class DefaultCommentService implements CommentService {
         commentRepository.update(comment);
     }
 
-    @Override
-    public List<Comment> getCommentsByPost(Long postId) {
-        return commentRepository.findByPostId(postId);
-    }
 }

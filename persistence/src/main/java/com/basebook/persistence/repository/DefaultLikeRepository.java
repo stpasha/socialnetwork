@@ -33,13 +33,4 @@ public class DefaultLikeRepository implements LikeRepository {
         return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM likes WHERE post_id = ?", Long.class, postId);
     }
 
-    @Override
-    public void delete(long id) {
-        jdbcTemplate.update("DELETE FROM likes WHERE like_id = ?", id);
-    }
-
-    @Override
-    public void deleteByPostId(long postId) {
-        jdbcTemplate.update("DELETE FROM likes WHERE post_id = ?", postId);
-    }
 }

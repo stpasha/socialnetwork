@@ -14,13 +14,19 @@ public class DefaultPostService implements PostService {
 
     private final PostRepository postRepository;
 
-    public DefaultPostService(PostRepository postRepository) {
+    private final TagService tagService;
+
+    public DefaultPostService(PostRepository postRepository,
+                              TagService tagService) {
         this.postRepository = postRepository;
+        this.tagService = tagService;
     }
 
     @Override
     public Optional<Post> get(Long id) {
-        return postRepository.findById(id);
+        Optional<Post> post = postRepository.findById(id);
+        post.ifPresent(po -> po.setTags(tagService.getTagsByPost(id)));
+        return post;
     }
 
 //    @Override

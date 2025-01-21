@@ -22,10 +22,6 @@ public class DefaultTagRepository implements TagRepository {
             .name(rs.getString("name"))
             .build();
 
-    @Override
-    public void save(Tag tag) {
-        jdbcTemplate.update("INSERT INTO tags (name) VALUES (?)", tag.getName());
-    }
 
     @Override
     public Tag findById(long id) {
@@ -40,10 +36,5 @@ public class DefaultTagRepository implements TagRepository {
     @Override
     public List<Tag> findTagByPost(Long postId) {
         return jdbcTemplate.query("SELECT t.* FROM tags t INNER JOIN post_tags pt ON t.tag_id = pt.tag_id WHERE pt.post_id = ?", tagRowMapper, postId);
-    }
-
-    @Override
-    public void delete(long id) {
-        jdbcTemplate.update("DELETE FROM tags WHERE tag_id = ?", id);
     }
 }

@@ -8,8 +8,6 @@ public interface LikeService {
 
     void create(Like like);
 
-    void delete(Long id);
-
     Long countLikesByPost(Long postId);
 
 }

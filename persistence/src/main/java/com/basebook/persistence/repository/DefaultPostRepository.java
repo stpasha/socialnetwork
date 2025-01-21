@@ -66,13 +66,13 @@ public class DefaultPostRepository implements PostRepository {
 
             if (rs.getObject("like_id") != null) {
                 Like like = mapLike(rs);
-                if (like != null) {
+                if (like != null && !like.isDeleted()) {
                     likes.add(like);
                 }
             }
             if (rs.getObject("comment_id") != null) {
                 Comment comment = mapComment(rs);
-                if (comment != null) {
+                if (comment != null && !comment.isDeleted()) {
                     comments.add(comment);
                 }
             }
@@ -141,7 +141,7 @@ public class DefaultPostRepository implements PostRepository {
                         FROM posts p
                             LEFT JOIN likes l ON p.post_id = l.post_id
                             LEFT JOIN comments c ON p.post_id = c.post_id
-                        WHERE p.post_id = ?
+                        WHERE p.post_id = ? AND p.is_deleted = FALSE
                         """, oneRowMapper, id).stream().findFirst();
     }
 
@@ -166,11 +166,13 @@ public class DefaultPostRepository implements PostRepository {
                                         LEFT JOIN (
                                             SELECT l.post_id, COUNT(l.like_id) AS lcount
                                             FROM likes l
+                                            WHERE l.is_deleted = FALSE
                                             GROUP BY l.post_id
                                         ) l ON p.post_id = l.post_id
                                         LEFT JOIN (
                                             SELECT c.post_id, COUNT(c.comment_id) AS ccount
                                             FROM comments c
+                                            WHERE c.is_deleted = FALSE
                                             GROUP BY c.post_id
                                         ) c ON p.post_id = c.post_id
                                         LEFT JOIN (
@@ -179,6 +181,7 @@ public class DefaultPostRepository implements PostRepository {
                                             INNER JOIN tags ON pt.tag_id = tags.tag_id
                                             GROUP BY pt.post_id
                                         ) tag_names ON p.post_id = tag_names.post_id
+                                    WHERE  p.is_deleted = FALSE
                                     ORDER BY p.created_at DESC
                                     LIMIT ? OFFSET ?
                     """;
@@ -201,15 +204,17 @@ public class DefaultPostRepository implements PostRepository {
                                 LEFT JOIN (
                                     SELECT l.post_id, COUNT(l.like_id) AS lcount
                                     FROM likes l
+                                    WHERE l.is_deleted = FALSE
                                     GROUP BY l.post_id
                                 ) l ON
                                     p.post_id = l.post_id
                                 LEFT JOIN (
                                     SELECT c.post_id, COUNT(c.comment_id) AS ccount
                                     FROM comments c
+                                    WHERE c.is_deleted = FALSE
                                     GROUP BY c.post_id
                                 ) c ON
-                                    p.post_id = c.post_id
+                                    p.post_id = c.post_id 
                                 INNER JOIN
                                     post_tags pt
                                 ON
@@ -223,7 +228,7 @@ public class DefaultPostRepository implements PostRepository {
                                             INNER JOIN tags ON pt.tag_id = tags.tag_id
                                             GROUP BY pt.post_id
                                         ) tag_names ON p.post_id = tag_names.post_id
-                                WHERE t.name = ?
+                                WHERE t.name = ? AND p.is_deleted = FALSE
                             ORDER BY p.created_at DESC
                             LIMIT ? OFFSET ?
                     """;
@@ -247,6 +252,6 @@ public class DefaultPostRepository implements PostRepository {
 
     @Override
     public void delete(long id) {
-        jdbcTemplate.update("DELETE FROM posts WHERE post_id = ?", id);
+        jdbcTemplate.update("UPDATE posts SET is_deleted = TRUE WHERE post_id = ?", id);
     }
 }

@@ -21,11 +21,6 @@ public class DefaultLikeService implements LikeService {
     }
 
     @Override
-    public void delete(Long id) {
-        likeRepository.delete(id);
-    }
-
-    @Override
     public Long countLikesByPost(Long postId) {
         return likeRepository.countByPostId(postId);
     }

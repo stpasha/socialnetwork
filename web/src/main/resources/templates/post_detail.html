@@ -15,8 +15,11 @@
             <img th:src="${post.imageUrl}" alt="Post Image" class="img-fluid rounded">
         </div>
         <div class="post-content">
-            <p class="post-paragraph" th:each="paragraph : ${post.content}" th:text="${paragraph}"></p>
+            <p class="post-paragraph" th:each="paragraph :  ${#strings.arraySplit(post.content, '\n')}" th:text="${paragraph}"></p>
         </div>
+
+        <p th:if="${post.createdAt != null}" th:text="${#temporals.format(post.createdAt, 'dd.MM.yyyy HH:mm')}"></p>
+        <p th:unless="${post.createdAt != null}">Дата не указана</p>
 
         <div class="tags mt-3">
             <span th:each="tag : ${post.tags}" th:text="${tag.name}" class="badge bg-secondary"></span>
@@ -72,6 +75,8 @@
         <ul class="list-group">
             <li th:each="comment : ${post.comments}" class="list-group-item d-flex justify-content-between align-items-start">
                 <div class="ms-2 me-auto">
+                    <p th:if="${comment.createdAt != null}" th:text="${#temporals.format(comment.createdAt, 'dd.MM.yyyy HH:mm')}"></p>
+                    <p th:unless="${comment.createdAt != null}">Дата не указана</p>
                     <form th:action="@{/comments/{id}/edit(id=${comment.id})}" method="post">
                         <textarea class="editable-textarea form-control" name="content" rows="2" required th:text="${comment.content}" readonly></textarea>
                         <input type="hidden" name="postId" th:value="${post.id}">
@@ -92,6 +97,9 @@
             </div>
             <button type="submit" class="btn btn-primary w-100 btn-custom">Add Comment</button>
         </form>
+    </div>
+    <div class="text-center mt-4">
+        <a th:href="@{/posts}"  class="btn btn-outline-primary">Back</a>
     </div>
 </div>
 

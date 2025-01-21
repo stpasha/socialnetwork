@@ -33,16 +33,6 @@ public class DefaultCommentRepository implements CommentRepository {
     }
 
     @Override
-    public Comment findById(long id) {
-        return jdbcTemplate.queryForObject("SELECT * FROM comments WHERE comment_id = ?", commentRowMapper, id);
-    }
-
-    @Override
-    public List<Comment> findByPostId(long postId) {
-        return jdbcTemplate.query("SELECT * FROM comments WHERE post_id = ?", commentRowMapper, postId);
-    }
-
-    @Override
     public void update(Comment comment) {
         jdbcTemplate.update("UPDATE comments SET content = ?, updated_at = ?, is_deleted = ? WHERE comment_id = ?",
                 comment.getContent(), comment.getUpdatedAt(), comment.isDeleted(), comment.getId());
@@ -50,11 +40,11 @@ public class DefaultCommentRepository implements CommentRepository {
 
     @Override
     public void delete(long id) {
-        jdbcTemplate.update("DELETE FROM comments WHERE comment_id = ?", id);
+        jdbcTemplate.update("UPDATE comments SET  is_deleted = TRUE WHERE comment_id = ?", id);
     }
 
     @Override
     public long countByPostId(long postId) {
-        return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM comments WHERE post_id = ?", Long.class, postId);
+        return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM comments WHERE post_id = ? AND is_deleted = FALSE", Long.class, postId);
     }
 }

@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+
 @Controller
 @RequestMapping("/comments")
 @Slf4j
@@ -24,7 +26,7 @@ public class CommentController {
             @RequestParam("content") String content
     ) {
         log.info("Add a comment to postId: {}", postId);
-        commentService.create(Comment.builder().postId(postId).content(content).build());
+        commentService.create(Comment.builder().postId(postId).content(content).createdAt(LocalDateTime.now()).build());
         return "redirect:/posts/" + postId;
     }
 
