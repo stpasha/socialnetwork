@@ -1,6 +1,7 @@
 package com.basebook.service;
 
 import com.basebook.model.Post;
+import com.basebook.model.PostList;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,5 +17,5 @@ public interface PostService {
 
     void delete(Long id);
 
-    List<Post> listPosts(int limit, int offset, String filter);
+    List<PostList> listPosts(int limit, int offset, String filter);
 }

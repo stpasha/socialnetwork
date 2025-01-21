@@ -1,6 +1,7 @@
 package com.basebook.web.controller;
 
 import com.basebook.model.Post;
+import com.basebook.model.PostList;
 import com.basebook.model.Tag;
 import com.basebook.service.ImageService;
 import com.basebook.service.PostService;
@@ -37,7 +38,7 @@ public class PostController {
             Model model
     ) {
         int offset = page * size;
-        List<Post> posts = postService.listPosts(size, offset, tag);
+        List<PostList> posts = postService.listPosts(size, offset, tag);
 
         List<Tag> allTags = tagService.getAll();
 

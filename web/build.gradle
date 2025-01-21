@@ -10,5 +10,6 @@ dependencies {
     implementation 'org.thymeleaf:thymeleaf'
     implementation 'org.thymeleaf:thymeleaf-spring6'
     testImplementation 'org.springframework:spring-test'
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
     providedRuntime 'javax.servlet:javax.servlet-api:4.0.1'
 }

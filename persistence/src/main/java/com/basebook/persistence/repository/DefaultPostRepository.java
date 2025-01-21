@@ -3,6 +3,7 @@ package com.basebook.persistence.repository;
 import com.basebook.model.Comment;
 import com.basebook.model.Like;
 import com.basebook.model.Post;
+import com.basebook.model.PostList;
 import com.basebook.repository.PostRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -10,7 +11,6 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 import java.util.*;
 
 @Repository
@@ -23,8 +23,8 @@ public class DefaultPostRepository implements PostRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private final RowMapper<Post> postRowMapper = (rs, rowNum) -> {
-        Post post = Post.builder()
+    private final RowMapper<PostList> postRowMapper = (rs, rowNum) -> {
+        PostList post = PostList.PostListBuilder.postListBuilder()
             .id(rs.getLong("post_id"))
             .title(rs.getString("title"))
             .content(rs.getString("content"))
@@ -32,6 +32,7 @@ public class DefaultPostRepository implements PostRepository {
             .isDeleted(rs.getBoolean("is_deleted"))
             .commentsCount(rs.getInt("ccount"))
             .likesCount(rs.getInt("lcount"))
+            .tagNames(rs.getString("concatenated_values"))
             .build();
         if (rs.getTimestamp("created_at") != null) {
             post.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
@@ -145,34 +146,41 @@ public class DefaultPostRepository implements PostRepository {
     }
 
     @Override
-    public List<Post> findAll(int limit, int offset, String filter) {
+    public List<PostList> findAll(int limit, int offset, String filter) {
         String sql;
         if (EMPTY_TAG.equals(filter)) {
             sql =
                     """
                             SELECT
-                                p.post_id,
-                                p.title,
-                                p.content,
-                                p.image_url,
-                                p.created_at,
-                                p.updated_at,
-                                p.is_deleted,
-                                l.lcount,
-                                c.ccount
-                            FROM posts p
-                                LEFT JOIN (
-                                    SELECT l.post_id, COUNT(l.like_id) AS lcount
-                                    FROM likes l
-                                    GROUP BY l.post_id
-                                ) l ON p.post_id = l.post_id
-                                LEFT JOIN (
-                                    SELECT c.post_id, COUNT(c.comment_id) AS ccount
-                                    FROM comments c
-                                    GROUP BY c.post_id
-                                ) c ON p.post_id = c.post_id
-                            ORDER BY p.created_at DESC
-                            LIMIT ? OFFSET ?
+                                        p.post_id,
+                                        p.title,
+                                        p.content,
+                                        p.image_url,
+                                        p.created_at,
+                                        p.updated_at,
+                                        p.is_deleted,
+                                        l.lcount,
+                                        c.ccount,
+                                        tag_names.concatenated_values
+                                    FROM posts p
+                                        LEFT JOIN (
+                                            SELECT l.post_id, COUNT(l.like_id) AS lcount
+                                            FROM likes l
+                                            GROUP BY l.post_id
+                                        ) l ON p.post_id = l.post_id
+                                        LEFT JOIN (
+                                            SELECT c.post_id, COUNT(c.comment_id) AS ccount
+                                            FROM comments c
+                                            GROUP BY c.post_id
+                                        ) c ON p.post_id = c.post_id
+                                        LEFT JOIN (
+                                            SELECT pt.post_id, LISTAGG(tags.name, ', ') AS concatenated_values
+                                            FROM post_tags pt
+                                            INNER JOIN tags ON pt.tag_id = tags.tag_id
+                                            GROUP BY pt.post_id
+                                        ) tag_names ON p.post_id = tag_names.post_id
+                                    ORDER BY p.created_at DESC
+                                    LIMIT ? OFFSET ?
                     """;
             return jdbcTemplate.query(sql, postRowMapper, limit, offset);
         } else {
@@ -187,7 +195,8 @@ public class DefaultPostRepository implements PostRepository {
                                 p.updated_at,
                                 p.is_deleted,
                                 l.lcount,
-                                c.ccount
+                                c.ccount,
+                                tag_names.concatenated_values
                             FROM posts p
                                 LEFT JOIN (
                                     SELECT l.post_id, COUNT(l.like_id) AS lcount
@@ -208,6 +217,12 @@ public class DefaultPostRepository implements PostRepository {
                                 INNER JOIN tags t
                                 ON
                                     pt.tag_id = t.tag_id
+                                LEFT JOIN (
+                                            SELECT pt.post_id, LISTAGG(tags.name, ', ') AS concatenated_values
+                                            FROM post_tags pt
+                                            INNER JOIN tags ON pt.tag_id = tags.tag_id
+                                            GROUP BY pt.post_id
+                                        ) tag_names ON p.post_id = tag_names.post_id
                                 WHERE t.name = ?
                             ORDER BY p.created_at DESC
                             LIMIT ? OFFSET ?

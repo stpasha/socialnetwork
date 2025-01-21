@@ -40,18 +40,14 @@ dependencies {
 
         // Servlet API
         api 'javax.servlet:javax.servlet-api:4.0.1'
+
+        // Jackson
+        api 'com.fasterxml.jackson.core:jackson-databind:2.18.2'
     }
 }
 
 configurations.configureEach {
     resolutionStrategy {
-        // Завершить сборку с ошибкой при конфликте версий
         failOnVersionConflict()
-
-        // Заменить одну зависимость на другую
-        dependencySubstitution {
-            //substitute module('commons-logging:commons-logging') using module('org.slf4j:jcl-over-slf4j:1.7.36')
-        }
-
     }
 }

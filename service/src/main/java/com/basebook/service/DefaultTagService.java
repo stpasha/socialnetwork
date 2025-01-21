@@ -24,18 +24,7 @@ public class DefaultTagService implements TagService{
     public List<Tag> getAll() {
         return tagRepository.findAll();
     }
-
-
-    @Override
-    public void create(Tag tag) {
-        tagRepository.save(tag);
-    }
-
-    @Override
-    public void delete(Long id) {
-        tagRepository.delete(id);
-    }
-
+    
     @Override
     public List<Tag> getTagsByPost(Long postId) {
         return tagRepository.findTagByPost(postId);

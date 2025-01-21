@@ -23,28 +23,4 @@ public class Post {
     private List<Tag> tags;
     private List<Comment> comments;
     private List<Like> likes;
-    private Integer likesCount;
-    private Integer commentsCount;
-
-    public int getLikesCount() {
-        if (likesCount == null) {
-            if (likes != null) {
-                return likes.size();
-            } else {
-                return 0;
-            }
-        }
-        return likesCount;
-    }
-
-    public int getCommentsCount() {
-        if (commentsCount == null) {
-            if (comments != null) {
-                return comments.size();
-            } else {
-                return 0;
-            }
-        }
-        return commentsCount;
-    }
 }

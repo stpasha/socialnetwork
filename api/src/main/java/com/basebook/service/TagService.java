@@ -10,10 +10,6 @@ public interface TagService {
 
     List<Tag> getAll();
 
-    void create(Tag tag);
-
-    void delete(Long id);
-
     List<Tag> getTagsByPost(Long postId);
 
 }

@@ -1,6 +1,7 @@
 package com.basebook.service;
 
 import com.basebook.model.Post;
+import com.basebook.model.PostList;
 import com.basebook.repository.PostRepository;
 import org.springframework.stereotype.Service;
 
@@ -45,7 +46,7 @@ public class DefaultPostService implements PostService {
     }
 
     @Override
-    public List<Post> listPosts(int limit, int offset, String filter) {
+    public List<PostList> listPosts(int limit, int offset, String filter) {
         return postRepository.findAll(limit, offset, filter);
     }
 }
