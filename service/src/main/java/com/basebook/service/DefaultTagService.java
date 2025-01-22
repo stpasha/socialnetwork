@@ -5,6 +5,7 @@ import com.basebook.repository.TagRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class DefaultTagService implements TagService{
@@ -16,7 +17,7 @@ public class DefaultTagService implements TagService{
     }
 
     @Override
-    public Tag get(Long id) {
+    public Optional<Tag> get(Long id) {
         return tagRepository.findById(id);
     }
 

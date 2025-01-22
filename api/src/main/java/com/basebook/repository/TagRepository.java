@@ -3,11 +3,12 @@ package com.basebook.repository;
 import com.basebook.model.Tag;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface TagRepository {
 
 
-    Tag findById(long id);
+    Optional<Tag> findById(long id);
 
     List<Tag> findAll();
 

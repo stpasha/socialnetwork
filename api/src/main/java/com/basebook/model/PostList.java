@@ -106,6 +106,16 @@ public class PostList extends Post {
             return this;
         }
 
+        public PostListBuilder likes(List<Like> likes) {
+            this.likes = likes;
+            return this;
+        }
+
+        public PostListBuilder comments(List<Comment> comments) {
+            this.comments = comments;
+            return this;
+        }
+
 
         public PostListBuilder likesCount(Integer likesCount) {
             this.likesCount = likesCount;

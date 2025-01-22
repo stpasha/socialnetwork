@@ -3,6 +3,7 @@ package com.basebook.model;
 import net.datafaker.Faker;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -16,6 +17,9 @@ public class PostTest {
         Long id = faker.number().randomNumber();
         String title = faker.lorem().sentence();
         String content = faker.lorem().paragraph();
+        String imag = faker.lorem().paragraph();
+        LocalDateTime created = faker.timeAndDate().birthday().atStartOfDay();
+        LocalDateTime updated = faker.timeAndDate().birthday().atStartOfDay();
 
         Tag tag = TagTest.createFakeTag();
         Like like = LikeTest.createFakeLike(id);
@@ -26,6 +30,9 @@ public class PostTest {
                 .title(title)
                 .content(content)
                 .tags(List.of(tag))
+                .createdAt(created)
+                .updatedAt(updated)
+                .imageUrl(imag)
                 .likes(List.of(like))
                 .comments(List.of(comment))
                 .build();
@@ -36,6 +43,9 @@ public class PostTest {
         assertThat(post.getTags()).containsExactly(tag);
         assertThat(post.getLikes()).containsExactly(like);
         assertThat(post.getComments()).containsExactly(comment);
+        assertThat(post.getCreatedAt()).isEqualTo(created);
+        assertThat(post.getUpdatedAt()).isEqualTo(updated);
+        assertThat(post.getImageUrl()).isEqualTo(imag);
     }
 
     @Test
@@ -63,10 +73,12 @@ public class PostTest {
         Long id = faker.number().randomNumber();
         String title = faker.lorem().sentence();
         String content = faker.lorem().paragraph();
+        LocalDateTime created = faker.timeAndDate().birthday().atStartOfDay();
 
         Post post = Post.builder()
                 .id(id)
                 .title(title)
+                .createdAt(created)
                 .content(content)
                 .build();
 
@@ -140,6 +152,8 @@ public class PostTest {
                 .content(null)
                 .tags(null)
                 .likes(null)
+                .createdAt(null)
+                .updatedAt(null)
                 .comments(null)
                 .build();
 
@@ -149,5 +163,7 @@ public class PostTest {
         assertThat(post.getTags()).isNull();
         assertThat(post.getLikes()).isNull();
         assertThat(post.getComments()).isNull();
+        assertThat(post.getCreatedAt()).isNull();
+        assertThat(post.getUpdatedAt()).isNull();
     }
 }

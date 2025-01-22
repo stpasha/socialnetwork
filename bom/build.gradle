@@ -16,6 +16,7 @@ dependencies {
         api 'org.springframework:spring-webmvc:6.2.0'
         api 'org.springframework:spring-jdbc:6.2.0'
         api 'org.springframework:spring-beans:6.2.0'
+        api 'org.springframework:spring-test:6.2.0'
 
         // Logging
         api 'org.slf4j:slf4j-api:1.7.32'
@@ -33,6 +34,7 @@ dependencies {
         api 'org.assertj:assertj-core:3.19.0'
         api 'org.springframework:spring-test:6.2.0'
         api 'net.datafaker:datafaker:2.4.2'
+        api 'org.mockito:mockito-core:5.14.2'
 
         // Thymeleaf
         api 'org.thymeleaf:thymeleaf:3.1.2.RELEASE'

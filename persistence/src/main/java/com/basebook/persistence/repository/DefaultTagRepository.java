@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class DefaultTagRepository implements TagRepository {
@@ -24,8 +25,8 @@ public class DefaultTagRepository implements TagRepository {
 
 
     @Override
-    public Tag findById(long id) {
-        return jdbcTemplate.queryForObject("SELECT * FROM tags WHERE tag_id = ?", tagRowMapper, id);
+    public Optional<Tag> findById(long id) {
+        return Optional.ofNullable(jdbcTemplate.queryForObject("SELECT * FROM tags WHERE tag_id = ?", tagRowMapper, id));
     }
 
     @Override

@@ -17,8 +17,8 @@ public class StringToTagConverter implements Converter<String, Tag> {
     @Override
     public Tag convert(String source) {
         try {
-            Long tagId = Long.valueOf(source); // Преобразуем строку в Long
-            return tagService.get(tagId);
+            Long tagId = Long.valueOf(source);
+            return tagService.get(tagId).orElseThrow(() -> new IllegalArgumentException("Malicious request for tag"));
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("Invalid tag ID format: " + source, e);
         }
