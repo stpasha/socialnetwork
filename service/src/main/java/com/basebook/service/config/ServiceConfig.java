@@ -7,6 +7,6 @@ import org.springframework.context.annotation.Import;
 
 @Configuration
 @Import(PersistenceConfig.class)
-@ComponentScan(basePackages = "com.basebook.service") // Укажите пакет с вашими сервисами
+@ComponentScan(basePackages = "com.basebook.service")
 public class ServiceConfig {
 }

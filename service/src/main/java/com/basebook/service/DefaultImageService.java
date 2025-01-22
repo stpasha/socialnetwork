@@ -25,7 +25,5 @@ public class DefaultImageService implements ImageService {
             throw new RuntimeException("Failed to save image", e);
         }
         return "/uploads/images/" + fileName;
-
-
     }
 }

@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8"/>
     <title th:text="${post.title}">Post Detail</title>
-    <link rel="stylesheet" th:href="@{/static/css/bootstrap.min.css}">
-    <link rel="stylesheet" th:href="@{/static/css/styles.css}">
+    <link rel="stylesheet" th:href="@{/static/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/static/css/styles.css}"/>
     <script src="/static/scripts.js"></script>
 </head>
 <body>
@@ -12,7 +12,7 @@
     <div class="post-card">
         <h1 class="text-center mb-4" th:text="${post.title}"></h1>
         <div class="text-center mb-4">
-            <img th:src="${post.imageUrl}" alt="Post Image" class="img-fluid rounded">
+            <img th:src="${post.imageUrl}" alt="Post Image" class="img-fluid rounded"/>
         </div>
         <div class="post-content">
             <p class="post-paragraph" th:each="paragraph :  ${#strings.arraySplit(post.content, '\n')}" th:text="${paragraph}"></p>
@@ -29,7 +29,7 @@
             <form id="like-form">
                 <input type="hidden" id="like-post-id" th:value="${post.id}" />
                 <button id="like-button" class="btn btn-outline-primary btn-custom">
-                    <img src="/static/like.png" width="24" class="me-2" alt="Like"> Like (<span id="likes_count" th:text="${#lists.size(post.likes)}"></span>)
+                    <img src="/static/like.png" width="24" class="me-2" alt="Like"/> Like (<span id="likes_count" th:text="${#lists.size(post.likes)}"></span>)
                 </button>
             </form>
         </div>
@@ -49,12 +49,12 @@
                 <input type="hidden" name="id" th:value="${post.id}" />
                 <div class="mb-3">
                     <label for="title" class="form-label">Title:</label>
-                    <input type="text" id="title" name="title" class="form-control" required th:value="${post.title}">
+                    <input type="text" id="title" name="title" class="form-control" required="required" th:value="${post.title}">
                 </div>
 
                 <div class="mb-3">
                     <label for="content" class="form-label">Content:</label>
-                    <textarea id="content" name="content" class="form-control" rows="5" required th:text="${post.content}"></textarea>
+                    <textarea id="content" name="content" class="form-control" rows="5" required="required" th:text="${post.content}"></textarea>
                 </div>
 
                 <div class="mb-3">
@@ -78,7 +78,7 @@
                     <p th:if="${comment.createdAt != null}" th:text="${#temporals.format(comment.createdAt, 'dd.MM.yyyy HH:mm')}"></p>
                     <p th:unless="${comment.createdAt != null}">Дата не указана</p>
                     <form th:action="@{/comments/{id}/edit(id=${comment.id})}" method="post">
-                        <textarea class="editable-textarea form-control" name="content" rows="2" required th:text="${comment.content}" readonly></textarea>
+                        <textarea class="editable-textarea form-control" name="content" rows="2" required="required" th:text="${comment.content}" readonly></textarea>
                         <input type="hidden" name="postId" th:value="${post.id}">
                     </form>
                 </div>
@@ -93,7 +93,7 @@
     <div class="mt-4">
         <form th:action="@{/comments/{postId}(postId=${post.id})}" method="post">
             <div class="mb-3">
-                <textarea name="content" rows="3" class="form-control" placeholder="Add a comment..." required></textarea>
+                <textarea name="content" rows="3" class="form-control" placeholder="Add a comment..." required="required"></textarea>
             </div>
             <button type="submit" class="btn btn-primary w-100 btn-custom">Add Comment</button>
         </form>
