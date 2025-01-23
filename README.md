@@ -20,3 +20,9 @@ docker run -p 8080:8080  my-base-book
 
 ## Database
 [schema.sql](persistence/src/main/resources/schema.sql)
+
+## Run tests
+./gradlew test
+
+## Build
+./gradlew build
