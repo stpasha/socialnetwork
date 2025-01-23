@@ -18,9 +18,9 @@ public class TestDataFactory {
 
     public Post createFakePost() {
         Long id = faker.number().randomNumber();
-        String title = faker.lorem().sentence();
-        String content = faker.lorem().paragraph();
-        String imag = faker.lorem().paragraph();
+        String title = faker.lorem().characters(10, 255);
+        String content = faker.lorem().characters(10, 1000);
+        String imageUrl = faker.internet().url();
         LocalDateTime created = faker.timeAndDate().birthday().atStartOfDay();
         LocalDateTime updated = faker.timeAndDate().birthday().atStartOfDay();
 
@@ -35,17 +35,16 @@ public class TestDataFactory {
                 .tags(List.of(tag))
                 .createdAt(created)
                 .updatedAt(updated)
-                .imageUrl(imag)
+                .imageUrl(imageUrl)
                 .likes(List.of(like))
                 .comments(List.of(comment))
                 .build();
-
     }
 
     public Post createFakePost(Long id) {
-        String title = faker.lorem().sentence();
-        String content = faker.lorem().paragraph();
-        String imag = faker.lorem().paragraph();
+        String title = faker.lorem().characters(10, 255);
+        String content = faker.lorem().characters(10, 1000);
+        String imageUrl = faker.internet().url();
         LocalDateTime created = faker.timeAndDate().birthday().atStartOfDay();
         LocalDateTime updated = faker.timeAndDate().birthday().atStartOfDay();
 
@@ -60,18 +59,17 @@ public class TestDataFactory {
                 .tags(List.of(tag))
                 .createdAt(created)
                 .updatedAt(updated)
-                .imageUrl(imag)
+                .imageUrl(imageUrl)
                 .likes(List.of(like))
                 .comments(List.of(comment))
                 .build();
-
     }
 
     public PostList createFakePostList() {
         Long id = faker.number().randomNumber();
-        String title = faker.lorem().sentence();
-        String content = faker.lorem().paragraph();
-        String imag = faker.lorem().paragraph();
+        String title = faker.lorem().characters(10, 255);
+        String content = faker.lorem().characters(10, 1000);
+        String imageUrl = faker.internet().url();
         LocalDateTime created = faker.timeAndDate().birthday().atStartOfDay();
         LocalDateTime updated = faker.timeAndDate().birthday().atStartOfDay();
 
@@ -86,11 +84,10 @@ public class TestDataFactory {
                 .tags(List.of(tag))
                 .createdAt(created)
                 .updatedAt(updated)
-                .imageUrl(imag)
+                .imageUrl(imageUrl)
                 .likes(List.of(like))
                 .comments(List.of(comment))
                 .build();
-
     }
 
     public List<PostList> createPostListWithQuantity(int quantity) {
@@ -113,7 +110,7 @@ public class TestDataFactory {
         return Comment.builder()
                 .id(faker.number().randomNumber())
                 .postId(postId)
-                .content(faker.lorem().sentence())
+                .content(faker.lorem().characters(10, 255))
                 .createdAt(LocalDateTime.now())
                 .build();
     }
@@ -128,8 +125,7 @@ public class TestDataFactory {
     public Tag createFakeTag() {
         return Tag.builder()
                 .id(faker.number().randomNumber())
-                .name(faker.lorem().word())
+                .name(faker.lorem().characters(1, 50))
                 .build();
     }
-
 }

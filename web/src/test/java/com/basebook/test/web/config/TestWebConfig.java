@@ -15,9 +15,4 @@ public class TestWebConfig {
     public Faker faker() {
         return new Faker();
     }
-
-    @Bean
-    public TestDataFactory testDataFactory() {
-        return new TestDataFactory(faker());
-    }
 }
