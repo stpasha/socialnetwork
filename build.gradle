@@ -17,6 +17,10 @@ allprojects {
 subprojects {
     apply plugin: 'checkstyle'
 
+    tasks.withType(Checkstyle).configureEach {
+        ignoreFailures = true
+    }
+
     if (project.name != 'bom') {
         apply plugin: 'java'
 

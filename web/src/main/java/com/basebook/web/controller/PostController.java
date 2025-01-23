@@ -70,7 +70,7 @@ public class PostController {
 
     @PostMapping
     public String createPost(@ModelAttribute Post post,
-                             @RequestParam("image") MultipartFile imageFile) {
+                             @RequestParam(value = "image", required = false) MultipartFile imageFile) {
         log.info("Start post creation: {}", post);
         if (!imageFile.isEmpty()) {
             try {
