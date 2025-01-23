@@ -70,7 +70,7 @@
             <a th:href="@{/posts/{id}(id=${post.id})}" th:text="${post.title}" class="text-decoration-none text-dark"></a>
         </h2>
         <img th:src="${post.imageUrl}" alt="Post Image" class="img-fluid"/>
-        <p th:utext="${#strings.abbreviate(post.content, 150)}"></p>
+        <p class="post-paragraph" th:each="paragraph :  ${#strings.arraySplit(#strings.abbreviate(post.content, 150), '\n')}" th:text="${paragraph}"></p>
         Date:
         <p th:if="${post.createdAt != null}" th:text="${#temporals.format(post.createdAt, 'dd.MM.yyyy HH:mm')}"></p>
         <p th:unless="${post.createdAt != null}">Дата не указана</p>

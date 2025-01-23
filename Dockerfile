@@ -11,7 +11,7 @@ WORKDIR /usr/local/tomcat/webapps
 # Копируем  WAR файл в контейнер
 COPY ./lib/libs/ /usr/local/tomcat/webapps/
 COPY ./lib/resources/main /usr/local/tomcat/
-RUN mv /usr/local/tomcat/webapps/web-1.0.0.war /usr/local/tomcat/webapps/ROOT.war
+RUN mv /usr/local/tomcat/webapps/web-1.0.war /usr/local/tomcat/webapps/ROOT.war
 # Открываем порт 8080 для доступа
 EXPOSE 8080
 # Открываем порт для дебага
