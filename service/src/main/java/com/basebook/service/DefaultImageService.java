@@ -15,7 +15,7 @@ public class DefaultImageService implements ImageService {
     private String uploadDir;
 
     @Override
-    public String saveImage(String fileName, byte[] data) throws IOException {
+    public String saveImage(final String fileName, final byte[] data) throws IOException {
         try {
             Path imagePath = Paths.get(uploadDir, fileName);
             Files.createDirectories(imagePath.getParent());

@@ -1,7 +1,11 @@
 package com.basebook.persistence.config;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.env.Environment;
@@ -27,22 +31,30 @@ public class PersistenceConfig {
 
     private static final String SCHEMA_SQL = "schema.sql";
     private static final String TESTDATA_SQL = "testdata.sql";
+    public static final String SPRING_DATASOURCE_DRIVER_CLASS_NAME = "spring.datasource.driver-class-name";
+    public static final String SPRING_DATASOURCE_URL = "spring.datasource.url";
+    public static final String SPRING_DATASOURCE_USERNAME = "spring.datasource.username";
+    public static final String SPRING_DATASOURCE_PASSWORD = "spring.datasource.password";
+    public static final String PROCESSING_DB_PARAMS_TO_DATA_SOURCE_DRIVER_URL_UNAME_PASWD =
+            "Processing db params to DataSource driver {} url {} uname {} paswd {}";
 
     @Bean
-    public DataSource dataSource(Environment env, ResourceLoader rl) {
+    public DataSource dataSource(final Environment env, ResourceLoader rl) {
         String[] activeProfiles = env.getActiveProfiles();
         log.debug("Read profile number from properties {}", activeProfiles.length);
         String activeProfile = activeProfiles.length > 0 ? activeProfiles[0] : "test";
-        String profileFile = String.format("classpath:application-%s.properties", activeProfile);
+        String profileFile = String.format("classpath:application-%s.properties",
+                activeProfile);
         Resource profileResource = rl.getResource(profileFile);
         Properties profileProperties = new Properties();
         try {
             profileProperties.load(profileResource.getInputStream());
-            String databaseDriver = profileProperties.getProperty("spring.datasource.driver-class-name");
-            String url = profileProperties.getProperty("spring.datasource.url");
-            String username = profileProperties.getProperty("spring.datasource.username");
-            String password = profileProperties.getProperty("spring.datasource.password");
-            log.info("Processing db params to DataSource driver {} url {} uname {} paswd {}", databaseDriver, url, username, password);
+            String databaseDriver = profileProperties.getProperty(SPRING_DATASOURCE_DRIVER_CLASS_NAME);
+            String url = profileProperties.getProperty(SPRING_DATASOURCE_URL);
+            String username = profileProperties.getProperty(SPRING_DATASOURCE_USERNAME);
+            String password = profileProperties.getProperty(SPRING_DATASOURCE_PASSWORD);
+            log.info(PROCESSING_DB_PARAMS_TO_DATA_SOURCE_DRIVER_URL_UNAME_PASWD,
+                    databaseDriver, url, username, password);
             DriverManagerDataSource dataSource = new DriverManagerDataSource();
             dataSource.setDriverClassName(databaseDriver);
             dataSource.setUrl(url);
@@ -56,7 +68,7 @@ public class PersistenceConfig {
     }
 
     @Bean
-    public JdbcTemplate jdbcTemplate(DataSource dataSource) {
+    public JdbcTemplate jdbcTemplate(final DataSource dataSource) {
         return new JdbcTemplate(dataSource);
     }
 
@@ -68,11 +80,12 @@ public class PersistenceConfig {
     //Assume dev env db is already preloaded
     @Profile("test")
     @EventListener
-    public void populate(ContextRefreshedEvent event) {
+    public void populate(final ContextRefreshedEvent event) {
         log.info("Start of schema deployment time {}", new Timestamp(event.getTimestamp()).toInstant());
         DataSource dataSource = event.getApplicationContext().getBean(DataSource.class);
         ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
-        populator.addScripts(new ClassPathResource(SCHEMA_SQL), new ClassPathResource(TESTDATA_SQL)); // Файл должен находится в ресурсах
+        // Файл должен находится в ресурсах!!!
+        populator.addScripts(new ClassPathResource(SCHEMA_SQL), new ClassPathResource(TESTDATA_SQL));
         populator.execute(dataSource);
         log.info("End of schema deployment time {}", Instant.now());
     }

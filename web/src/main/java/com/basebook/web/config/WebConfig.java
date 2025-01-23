@@ -1,6 +1,5 @@
 package com.basebook.web.config;
 
-import com.basebook.service.TagService;
 import com.basebook.service.config.ServiceConfig;
 import com.basebook.web.converter.StringToTagConverter;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,17 +25,19 @@ public class WebConfig implements WebMvcConfigurer {
 
     public static final String UPLOADS_MAPPING = "/uploads/**";
     public static final String STATIC_MAPPING = "/static/**";
+    public static final String IMAGE_UPLOAD_RESOURCE = "${image.upload.resource}";
+    public static final String IMAGE_STATIC_RESOURCE = "${image.static.resource}";
 
 
     private final StringToTagConverter stringToTagConverter;
 
-    @Value("${image.upload.resource}")
+    @Value(IMAGE_UPLOAD_RESOURCE)
     private String uploadResource;
 
-    @Value("${image.static.resource}")
+    @Value(IMAGE_STATIC_RESOURCE)
     private String staticResource;
 
-    public WebConfig(StringToTagConverter stringToTagConverter) {
+    public WebConfig(final StringToTagConverter stringToTagConverter) {
         this.stringToTagConverter = stringToTagConverter;
     }
 
@@ -52,12 +53,12 @@ public class WebConfig implements WebMvcConfigurer {
 
 
     @Override
-    public void addViewControllers(ViewControllerRegistry registry) {
+    public void addViewControllers(final ViewControllerRegistry registry) {
         registry.addRedirectViewController("/", "/posts");
     }
 
     @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+    public void addResourceHandlers(final ResourceHandlerRegistry registry) {
         registry.addResourceHandler(STATIC_MAPPING)
                 .addResourceLocations(staticResource);
         registry.addResourceHandler(UPLOADS_MAPPING)

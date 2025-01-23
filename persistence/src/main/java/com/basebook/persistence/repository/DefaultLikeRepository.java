@@ -11,7 +11,7 @@ public class DefaultLikeRepository implements LikeRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public DefaultLikeRepository(JdbcTemplate jdbcTemplate) {
+    public DefaultLikeRepository(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -23,13 +23,13 @@ public class DefaultLikeRepository implements LikeRepository {
             .build();
 
     @Override
-    public void save(Like like) {
+    public void save(final Like like) {
         jdbcTemplate.update("INSERT INTO likes (post_id, created_at, is_deleted) VALUES (?, ?, ?)",
                 like.getPostId(), like.getCreatedAt(), like.isDeleted());
     }
 
     @Override
-    public long countByPostId(long postId) {
+    public long countByPostId(final long postId) {
         return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM likes WHERE post_id = ?", Long.class, postId);
     }
 

@@ -8,16 +8,16 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class DefaultTagService implements TagService{
+public class DefaultTagService implements TagService {
 
     private final TagRepository tagRepository;
 
-    public DefaultTagService(TagRepository tagRepository) {
+    public DefaultTagService(final TagRepository tagRepository) {
         this.tagRepository = tagRepository;
     }
 
     @Override
-    public Optional<Tag> get(Long id) {
+    public Optional<Tag> get(final Long id) {
         return tagRepository.findById(id);
     }
 
@@ -25,9 +25,9 @@ public class DefaultTagService implements TagService{
     public List<Tag> getAll() {
         return tagRepository.findAll();
     }
-    
+
     @Override
-    public List<Tag> getTagsByPost(Long postId) {
+    public List<Tag> getTagsByPost(final Long postId) {
         return tagRepository.findTagByPost(postId);
     }
 }

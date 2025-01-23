@@ -12,9 +12,12 @@ import java.util.Optional;
 @Repository
 public class DefaultTagRepository implements TagRepository {
 
+    public static final String FIND_BY_POSt = "SELECT t.* FROM tags t INNER JOIN post_tags pt ON t.tag_id = pt.tag_id " +
+            " WHERE pt.post_id = ?";
+    public static final String QUERY_TAGS = "SELECT * FROM tags WHERE tag_id = ?";
     private final JdbcTemplate jdbcTemplate;
 
-    public DefaultTagRepository(JdbcTemplate jdbcTemplate) {
+    public DefaultTagRepository(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -25,8 +28,8 @@ public class DefaultTagRepository implements TagRepository {
 
 
     @Override
-    public Optional<Tag> findById(long id) {
-        return Optional.ofNullable(jdbcTemplate.queryForObject("SELECT * FROM tags WHERE tag_id = ?", tagRowMapper, id));
+    public Optional<Tag> findById(final long id) {
+        return Optional.ofNullable(jdbcTemplate.queryForObject(QUERY_TAGS, tagRowMapper, id));
     }
 
     @Override
@@ -35,7 +38,7 @@ public class DefaultTagRepository implements TagRepository {
     }
 
     @Override
-    public List<Tag> findTagByPost(Long postId) {
-        return jdbcTemplate.query("SELECT t.* FROM tags t INNER JOIN post_tags pt ON t.tag_id = pt.tag_id WHERE pt.post_id = ?", tagRowMapper, postId);
+    public List<Tag> findTagByPost(final Long postId) {
+        return jdbcTemplate.query(FIND_BY_POSt, tagRowMapper, postId);
     }
 }

@@ -124,7 +124,8 @@ public class DefaultPostServiceTest {
 
             when(repository.findAll(limit, offset, filter)).thenReturn(postLists);
 
-            assertEquals(postLists.size(), service.listPosts(limit, offset, filter).size(), "Size of returned posts should match");
+            assertEquals(postLists.size(), service.listPosts(limit, offset, filter).size(),
+                    "Size of returned posts should match");
         }
     }
 
@@ -199,7 +200,8 @@ public class DefaultPostServiceTest {
             Like like = testFactory.createFakeLike(faker.number().randomNumber());
             long randomLikes = faker.number().randomNumber();
             when(likeRepository.countByPostId(like.getPostId())).thenReturn(randomLikes);
-            assertEquals(randomLikes, likeService.countLikesByPost(like.getPostId()), "Should be equal num of likes");
+            assertEquals(randomLikes, likeService.countLikesByPost(like.getPostId()),
+                    "Should be equal num of likes");
         }
     }
 
@@ -215,7 +217,8 @@ public class DefaultPostServiceTest {
             byte[] data = new byte[]{1, 2, 3, 4};
             Path expectedPath = Paths.get(uploadDir, fileName);
             try (MockedStatic<Files> mockedStatic = mockStatic(Files.class)) {
-                mockedStatic.when(() -> Files.createDirectories(expectedPath.getParent())).thenReturn(expectedPath);
+                mockedStatic.when(() -> Files.createDirectories(expectedPath.getParent()))
+                        .thenReturn(expectedPath);
                 mockedStatic.when(() -> Files.write(expectedPath, data)).thenReturn(expectedPath);
                 String result = imageService.saveImage(fileName, data);
                 assertEquals("/uploads/images/" + fileName, result);

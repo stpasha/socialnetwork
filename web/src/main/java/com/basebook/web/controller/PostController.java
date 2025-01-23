@@ -9,7 +9,12 @@ import com.basebook.service.TagService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -20,6 +25,8 @@ import java.util.List;
 @Slf4j
 public class PostController {
 
+    public static final String LISTING_POST_WITH_POSTS_TAGS_PAGENUM_SIZE =
+            "Listing post with parameters posts {} tags {} selected tag {} pagenum {} size {}";
     private final PostService postService;
     private final TagService tagService;
     private final ImageService imageService;
@@ -47,7 +54,7 @@ public class PostController {
         model.addAttribute("selectedTag", tag);
         model.addAttribute("currentPage", page);
         model.addAttribute("pageSize", size);
-        log.info("Listing post with parameters posts {} tags {} selected tag {} pagenum {} size {}", posts.toArray(), allTags.toArray(), tag, page, size);
+        log.info(LISTING_POST_WITH_POSTS_TAGS_PAGENUM_SIZE, posts.toArray(), allTags.toArray(), tag, page, size);
         return "post_list";
     }
 
@@ -67,7 +74,8 @@ public class PostController {
         log.info("Start post creation: {}", post);
         if (!imageFile.isEmpty()) {
             try {
-                post.setImageUrl(imageService.saveImage(imageFile.getOriginalFilename(), imageFile.getBytes()));
+                post.setImageUrl(imageService
+                        .saveImage(imageFile.getOriginalFilename(), imageFile.getBytes()));
                 log.info("Image saved {}", post.getImageUrl());
             } catch (IOException e) {
                 throw new RuntimeException("Failed to save image", e);
@@ -82,7 +90,8 @@ public class PostController {
                        @RequestParam("image") MultipartFile imageFile) {
         if (!imageFile.isEmpty()) {
             try {
-                post.setImageUrl(imageService.saveImage(imageFile.getOriginalFilename(), imageFile.getBytes()));
+                post.setImageUrl(imageService
+                        .saveImage(imageFile.getOriginalFilename(), imageFile.getBytes()));
                 log.info("Image updated {}", post.getImageUrl());
             } catch (IOException e) {
                 throw new RuntimeException("Failed to save image", e);

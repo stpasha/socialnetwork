@@ -21,14 +21,14 @@ public class TemplateConfig {
     }
 
     @Bean
-    public SpringTemplateEngine templateEngine(ITemplateResolver templateResolver) {
+    public SpringTemplateEngine templateEngine(final ITemplateResolver templateResolver) {
         SpringTemplateEngine engine = new SpringTemplateEngine();
         engine.setTemplateResolver(templateResolver);
         return engine;
     }
 
     @Bean
-    public ViewResolver viewResolver(SpringTemplateEngine templateEngine) {
+    public ViewResolver viewResolver(final SpringTemplateEngine templateEngine) {
         ThymeleafViewResolver resolver = new ThymeleafViewResolver();
         resolver.setTemplateEngine(templateEngine);
         resolver.setCharacterEncoding("UTF-8");
