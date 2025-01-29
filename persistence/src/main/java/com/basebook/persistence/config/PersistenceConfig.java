@@ -1,11 +1,7 @@
 package com.basebook.persistence.config;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.*;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.env.Environment;
@@ -16,25 +12,22 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
+import org.yaml.snakeyaml.Yaml;
 
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.Properties;
+import java.util.Map;
 
 @ComponentScan("com.basebook.persistence")
-@PropertySource("classpath:application.properties")
+@PropertySource(value = "classpath:application.yaml", factory = YamlPropertySourceFactory.class)
 @Configuration
 @Slf4j
 public class PersistenceConfig {
 
     private static final String SCHEMA_SQL = "schema.sql";
     private static final String TESTDATA_SQL = "testdata.sql";
-    public static final String SPRING_DATASOURCE_DRIVER_CLASS_NAME = "spring.datasource.driver-class-name";
-    public static final String SPRING_DATASOURCE_URL = "spring.datasource.url";
-    public static final String SPRING_DATASOURCE_USERNAME = "spring.datasource.username";
-    public static final String SPRING_DATASOURCE_PASSWORD = "spring.datasource.password";
     public static final String PROCESSING_DB_PARAMS_TO_DATA_SOURCE_DRIVER_URL_UNAME_PASWD =
             "Processing db params to DataSource driver {} url {} uname {} paswd {}";
 
@@ -43,16 +36,19 @@ public class PersistenceConfig {
         String[] activeProfiles = env.getActiveProfiles();
         log.debug("Read profile number from properties {}", activeProfiles.length);
         String activeProfile = activeProfiles.length > 0 ? activeProfiles[0] : "test";
-        String profileFile = String.format("classpath:application-%s.properties",
+        String profileFile = String.format("classpath:application-%s.yaml",
                 activeProfile);
         Resource profileResource = rl.getResource(profileFile);
-        Properties profileProperties = new Properties();
+        Yaml profileProperties = new Yaml();
         try {
-            profileProperties.load(profileResource.getInputStream());
-            String databaseDriver = profileProperties.getProperty(SPRING_DATASOURCE_DRIVER_CLASS_NAME);
-            String url = profileProperties.getProperty(SPRING_DATASOURCE_URL);
-            String username = profileProperties.getProperty(SPRING_DATASOURCE_USERNAME);
-            String password = profileProperties.getProperty(SPRING_DATASOURCE_PASSWORD);
+            Map<String, Object> properties = profileProperties.load(profileResource.getInputStream());
+            Map<String, Object> spring = (Map<String, Object>) properties.get("spring");
+            Map<String, Object> datasource = (Map<String, Object>) spring.get("datasource");
+            String databaseDriver = (String) datasource.get("driver-class-name");
+            String url = (String) datasource.get("url");
+            String username = (String) datasource.get("username");
+            String password = (String) datasource.get("password");
+
             log.info(PROCESSING_DB_PARAMS_TO_DATA_SOURCE_DRIVER_URL_UNAME_PASWD,
                     databaseDriver, url, username, password);
             DriverManagerDataSource dataSource = new DriverManagerDataSource();

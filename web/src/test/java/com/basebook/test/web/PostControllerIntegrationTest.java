@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringJUnitConfig(classes = {WebConfig.class, TestWebConfig.class})
 @WebAppConfiguration
-@TestPropertySource(locations = "classpath:application-test.properties")
+@TestPropertySource(locations = "classpath:application-test.yaml")
 public class PostControllerIntegrationTest {
 
     @Autowired

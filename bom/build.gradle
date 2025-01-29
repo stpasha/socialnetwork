@@ -46,6 +46,7 @@ dependencies {
 
         // Jackson
         api 'com.fasterxml.jackson.core:jackson-databind:2.18.2'
+        api 'org.yaml:snakeyaml:2.3'
     }
 }
 

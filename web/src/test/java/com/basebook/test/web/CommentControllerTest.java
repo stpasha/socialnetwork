@@ -1,7 +1,6 @@
 package com.basebook.test.web;
 
 import com.basebook.model.Comment;
-import com.basebook.service.CommentService;
 import com.basebook.test.web.config.TestWebConfig;
 import com.basebook.web.config.WebConfig;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringJUnitConfig(classes = {WebConfig.class, TestWebConfig.class})
 @WebAppConfiguration
-@TestPropertySource(locations = "classpath:application-test.properties")
+@TestPropertySource(locations = "classpath:application-test.yaml")
 public class CommentControllerTest {
 
     public static final long POST_ID = 1001L;
