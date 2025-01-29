@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="${post.title}">Post Detail</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/styles.css}"/>
+    <script src="/scripts.js"></script>
+    <script src="/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+<div class="container mt-4">
+    <div class="post-card">
+        <h1 class="text-center mb-4" th:text="${post.title}"></h1>
+        <div class="text-center mb-4">
+            <img th:src="${post.imageUrl}" alt="Post Image" class="img-fluid rounded"/>
+        </div>
+        <div class="post-content">
+            <p class="post-paragraph" th:each="paragraph :  ${#strings.arraySplit(post.content, '\n')}" th:text="${paragraph}"></p>
+        </div>
+
+        <p th:if="${post.createdAt != null}" th:text="${#temporals.format(post.createdAt, 'dd.MM.yyyy HH:mm')}"></p>
+        <p th:unless="${post.createdAt != null}">Дата не указана</p>
+
+        <div class="tags mt-3">
+            <span th:each="tag : ${post.tags}" th:text="${tag.name}" class="badge bg-secondary"></span>
+        </div>
+
+        <div class="text-left mt-4">
+            <form id="like-form">
+                <input type="hidden" id="like-post-id" th:value="${post.id}" />
+                <button id="like-button" class="btn btn-outline-primary btn-custom">
+                    <img src="../like.png" width="24" class="me-2" alt="Like"/> Like (<span id="likes_count" th:text="${#lists.size(post.likes)}"></span>)
+                </button>
+            </form>
+        </div>
+        <div class="mt-4">
+            <button class="btn btn-primary btn-custom" onclick="toggleForm()">Edit Post</button>
+        </div>
+        <div class="mt-4 text-end">
+            <form th:action="@{/posts/{id}/delete(id=${post.id})}" method="post">
+                <button type="submit" class="btn btn-danger btn-custom">Delete Post</button>
+            </form>
+        </div>
+
+
+        <div class="form-container" id="postForm" style="display: none;">
+            <h2>Edit Post</h2>
+            <form th:action="@{/posts/edit/}" th:object="${post}" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="id" th:value="${post.id}" />
+                <div class="mb-3">
+                    <label for="title" class="form-label">Title:</label>
+                    <input type="text" id="title" name="title" class="form-control" required="required" th:value="${post.title}">
+                </div>
+
+                <div class="mb-3">
+                    <label for="content" class="form-label">Content:</label>
+                    <textarea id="content" name="content" class="form-control" rows="5" required="required" th:text="${post.content}"></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label for="image" class="form-label">Upload Image:</label>
+                    <input type="file" id="image" name="image" class="form-control" accept="image/png, image/jpeg">
+                </div>
+
+                <button type="submit" class="btn btn-success w-100">Save Changes</button>
+            </form>
+        </div>
+
+
+    </div>
+
+
+    <div class="mt-5">
+        <h2>Comments</h2>
+        <ul class="list-group">
+            <li th:each="comment : ${post.comments}" class="list-group-item d-flex justify-content-between align-items-start">
+                <div class="ms-2 me-auto">
+                    <p th:if="${comment.createdAt != null}" th:text="${#temporals.format(comment.createdAt, 'dd.MM.yyyy HH:mm')}"></p>
+                    <p th:unless="${comment.createdAt != null}">Дата не указана</p>
+                    <form th:action="@{/comments/{id}/edit(id=${comment.id})}" method="post">
+                        <textarea class="editable-textarea form-control" name="content" rows="2" required="required" th:text="${comment.content}" readonly></textarea>
+                        <input type="hidden" name="postId" th:value="${post.id}">
+                    </form>
+                </div>
+                <form th:action="@{/comments/{id}/delete(id=${comment.id})}" method="post">
+                    <input type="hidden" name="postId" th:value="${post.id}">
+                    <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                </form>
+            </li>
+        </ul>
+    </div>
+
+    <div class="mt-4">
+        <form th:action="@{/comments/{postId}(postId=${post.id})}" method="post">
+            <div class="mb-3">
+                <textarea name="content" rows="3" class="form-control" placeholder="Add a comment..." required="required"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary w-100 btn-custom">Add Comment</button>
+        </form>
+    </div>
+    <div class="text-center mt-4">
+        <a th:href="@{/posts}"  class="btn btn-outline-primary">Back</a>
+    </div>
+</div>
+
+</body>
+</html>

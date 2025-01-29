@@ -1,0 +1,9 @@
+spring:
+  profiles:
+    default: test
+image:
+  upload:
+    dir: ../uploads/images
+    resource: file:/usr/local/tomcat/uploads/
+  static:
+    resource: classpath:/static/
