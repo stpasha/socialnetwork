@@ -3,7 +3,7 @@ spring:
     default: test
 image:
   upload:
-    dir: ../uploads/images
-    resource: file:/usr/local/tomcat/uploads/
+    dir: ./uploads/images
+    resource: "file:uploads/"
   static:
     resource: classpath:/static/

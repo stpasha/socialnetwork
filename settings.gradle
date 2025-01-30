@@ -1,7 +1,0 @@
-rootProject.name = 'basebook'
-include 'api'
-include 'persistence'
-include 'service'
-include 'bom'
-include 'web'
-
