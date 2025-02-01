@@ -1,21 +1,20 @@
 package com.basebook.test.persistence;
 
+import com.basebook.annotations.BasebookTest;
 import com.basebook.model.Comment;
 import com.basebook.model.Post;
 import com.basebook.persistence.repository.DefaultCommentRepository;
-import com.basebook.test.persistence.config.TestRepositoryConfig;
 import com.basebook.util.TestDataFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@SpringJUnitConfig(classes = TestRepositoryConfig.class)
+@BasebookTest
 public class CommentRepositoryTest {
 
     public static final long ID = 1L;
@@ -52,7 +51,7 @@ public class CommentRepositoryTest {
         Comment comment = testDataFactory.createFakeComment(ID);
         commentRepository.save(comment);
         comment.setContent("Updated comment");
-        comment.setId(jdbcTemplate.queryForObject("SELECT comment_id FROM comments", Long.class));
+        comment.setId(jdbcTemplate.queryForObject("SELECT comment_id FROM comments WHERE post_id = ?", Long.class, ID));
         commentRepository.update(comment);
         String updatedContent = jdbcTemplate.queryForObject("SELECT content FROM comments WHERE comment_id = ?", String.class, comment.getId());
         assertEquals("Updated comment", updatedContent);
@@ -61,10 +60,9 @@ public class CommentRepositoryTest {
     @Test
     void testDeleteComment() {
         Comment comment = testDataFactory.createFakeComment(ID);
-        comment.setId(DEL_ID);
         commentRepository.save(comment);
-        commentRepository.delete(DEL_ID);
-        boolean isDeleted = jdbcTemplate.queryForObject("SELECT is_deleted FROM comments WHERE comment_id = ?", Boolean.class, DEL_ID);
+        commentRepository.delete(jdbcTemplate.queryForObject("SELECT comment_id FROM comments WHERE post_id = ?", Long.class, ID));
+        boolean isDeleted = jdbcTemplate.queryForObject("SELECT is_deleted FROM comments WHERE post_id = ?", Boolean.class, ID);
         assertEquals(true, isDeleted);
     }
 

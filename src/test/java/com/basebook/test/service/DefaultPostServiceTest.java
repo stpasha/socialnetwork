@@ -1,5 +1,6 @@
 package com.basebook.test.service;
 
+import com.basebook.annotations.BasebookTest;
 import com.basebook.model.Comment;
 import com.basebook.model.Like;
 import com.basebook.model.Post;
@@ -7,9 +8,11 @@ import com.basebook.model.PostList;
 import com.basebook.repository.CommentRepository;
 import com.basebook.repository.LikeRepository;
 import com.basebook.repository.PostRepository;
-import com.basebook.service.*;
-import com.basebook.service.config.ServiceConfig;
-import com.basebook.test.service.config.TestServiceConfig;
+import com.basebook.repository.TagRepository;
+import com.basebook.service.CommentService;
+import com.basebook.service.ImageService;
+import com.basebook.service.LikeService;
+import com.basebook.service.PostService;
 import com.basebook.util.TestDataFactory;
 import net.datafaker.Faker;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,7 +20,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -29,13 +32,13 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@SpringJUnitConfig(classes = {TestServiceConfig.class, ServiceConfig.class})
+@BasebookTest
 public class DefaultPostServiceTest {
 
     @Autowired
     private PostService service;
 
-    @Autowired
+    @MockitoBean
     private PostRepository repository;
 
     @Autowired
@@ -44,13 +47,13 @@ public class DefaultPostServiceTest {
     @Autowired
     private TestDataFactory testFactory;
 
-    @Autowired
-    private TagService tagService;
+    @MockitoBean
+    private TagRepository tagRepository;
 
     @Autowired
     private LikeService likeService;
 
-    @Autowired
+    @MockitoBean
     private LikeRepository likeRepository;
 
     @Autowired
@@ -59,7 +62,7 @@ public class DefaultPostServiceTest {
     @Autowired
     private CommentService commentService;
 
-    @Autowired
+    @MockitoBean
     private CommentRepository commentRepository;
 
 
@@ -78,7 +81,7 @@ public class DefaultPostServiceTest {
                     () -> assertNotNull(repository),
                     () -> assertNotNull(faker),
                     () -> assertNotNull(testFactory),
-                    () -> assertNotNull(tagService)
+                    () -> assertNotNull(tagRepository)
             );
         }
 
@@ -87,7 +90,7 @@ public class DefaultPostServiceTest {
             Long id = faker.number().randomNumber();
             Post post = testFactory.createFakePost(id);
             when(repository.findById(id)).thenReturn(Optional.of(post));
-            when(tagService.getTagsByPost(id)).thenReturn(post.getTags());
+            when(tagRepository.findTagByPost(id)).thenReturn(post.getTags());
 
             Optional<Post> result = service.get(id);
 
@@ -144,7 +147,7 @@ public class DefaultPostServiceTest {
                     () -> assertNotNull(repository),
                     () -> assertNotNull(faker),
                     () -> assertNotNull(testFactory),
-                    () -> assertNotNull(tagService)
+                    () -> assertNotNull(tagRepository)
             );
         }
 

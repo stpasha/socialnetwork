@@ -1,14 +1,13 @@
 package com.basebook.test.persistence;
 
+import com.basebook.annotations.BasebookTest;
 import com.basebook.model.Tag;
 import com.basebook.persistence.repository.DefaultTagRepository;
-import com.basebook.test.persistence.config.TestRepositoryConfig;
 import com.basebook.util.TestDataFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,7 +15,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@SpringJUnitConfig(classes = TestRepositoryConfig.class)
+@BasebookTest
 public class TagRepositoryTest {
 
     @Autowired

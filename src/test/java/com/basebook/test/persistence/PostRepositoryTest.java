@@ -1,14 +1,16 @@
 package com.basebook.test.persistence;
 
 
+import com.basebook.annotations.BasebookTest;
 import com.basebook.model.Post;
 import com.basebook.persistence.repository.DefaultPostRepository;
-import com.basebook.test.persistence.config.TestRepositoryConfig;
 import com.basebook.util.TestDataFactory;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -16,7 +18,7 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@SpringJUnitConfig(classes = TestRepositoryConfig.class)
+@BasebookTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class PostRepositoryTest {
 
@@ -34,7 +36,7 @@ public class PostRepositoryTest {
     @Order(1)
     void testSavePost() {
         jdbcTemplate.execute("DELETE FROM posts");
-        Stream.of(testDataFactory.createFakePost(), testDataFactory.createFakePost(), testDataFactory.createFakePost()).forEach(post -> postRepository.save(post));
+        Stream.of(testDataFactory.createFakePost(1L), testDataFactory.createFakePost(2L), testDataFactory.createFakePost(3L)).forEach(post -> postRepository.save(post));
         long count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM posts", Long.class);
         assertEquals(3, count);
     }
@@ -54,9 +56,8 @@ public class PostRepositoryTest {
     @Test
     @Order(3)
     void testUpdatePost() {
-        Post post = testDataFactory.createFakePost(1L);
+        Post post = testDataFactory.createFakePost(999L);
         post.setTitle("Updated post");
-
         postRepository.update(post);
 
         String updatedTitle = jdbcTemplate.queryForObject("SELECT title FROM posts WHERE post_id = ?", String.class, post.getId());
@@ -66,9 +67,9 @@ public class PostRepositoryTest {
     @Test
     @Order(4)
     void testDeletePost() {
-        postRepository.delete(3L);
-
-        boolean isDeleted = jdbcTemplate.queryForObject("SELECT is_deleted FROM posts WHERE post_id = ?", Boolean.class, 3L);
+        Post post = testDataFactory.createFakePost(999L);
+        postRepository.delete(999L);
+        boolean isDeleted = jdbcTemplate.queryForObject("SELECT is_deleted FROM posts WHERE post_id = ?", Boolean.class, 999L);
         assertEquals(true, isDeleted);
     }
 }

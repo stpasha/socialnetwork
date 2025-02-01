@@ -1,17 +1,14 @@
 package com.basebook.test.web;
 
+import com.basebook.annotations.BasebookTest;
 import com.basebook.model.Comment;
-import com.basebook.service.CommentService;
-import com.basebook.test.web.config.TestWebConfig;
-import com.basebook.web.config.WebConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -21,10 +18,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringJUnitConfig(classes = {WebConfig.class, TestWebConfig.class})
+@BasebookTest
 @WebAppConfiguration
-@TestPropertySource(locations = "classpath:application-test.yml")
-public class CommentControllerTest {
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+public class CommentControllerIT {
 
     public static final long POST_ID = 1001L;
     @Autowired

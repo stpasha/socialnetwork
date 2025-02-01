@@ -1,22 +1,20 @@
 package com.basebook.test.persistence;
 
+import com.basebook.annotations.BasebookTest;
 import com.basebook.model.Like;
 import com.basebook.model.Post;
 import com.basebook.persistence.repository.DefaultLikeRepository;
-import com.basebook.test.persistence.config.TestRepositoryConfig;
 import com.basebook.util.TestDataFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
-
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@SpringJUnitConfig(classes = TestRepositoryConfig.class)
+@BasebookTest
 public class LikeRepositoryTest {
 
     public static final long ID = 1L;
