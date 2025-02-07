@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.basebook</groupId>
 	<artifactId>basebook</artifactId>
-	<version>${version}</version>
+	<version>0.2</version>
 	<name>basebook</name>
 	<description>Example project of social network</description>
 	<url/>
