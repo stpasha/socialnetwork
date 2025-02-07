@@ -1,7 +1,6 @@
 package com.basebook.persistence.repository;
 
 import com.basebook.model.Comment;
-import com.basebook.repository.CommentRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -9,9 +8,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class DefaultCommentRepository implements CommentRepository {
 
-    public static final String INSERT = "INSERT INTO comments (post_id, content, created_at, updated_at, is_deleted) "
-            + "VALUES (?, ?, ?, ?, ?)";
-    public static final String COUNT = "SELECT COUNT(*) FROM comments WHERE post_id = ? AND is_deleted = FALSE";
     private final JdbcTemplate jdbcTemplate;
 
     public DefaultCommentRepository(final JdbcTemplate jdbcTemplate) {
@@ -29,7 +25,8 @@ public class DefaultCommentRepository implements CommentRepository {
 
     @Override
     public void save(final Comment comment) {
-        jdbcTemplate.update(INSERT,
+        jdbcTemplate.update("INSERT INTO comments (post_id, content, created_at, updated_at, is_deleted) "
+                        + "VALUES (?, ?, ?, ?, ?)",
                 comment.getPostId(),
                 comment.getContent(),
                 comment.getCreatedAt(),
@@ -50,6 +47,7 @@ public class DefaultCommentRepository implements CommentRepository {
 
     @Override
     public long countByPostId(final long postId) {
-        return jdbcTemplate.queryForObject(COUNT, Long.class, postId);
+        return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM comments WHERE post_id = ? AND is_deleted = FALSE",
+                Long.class, postId);
     }
 }

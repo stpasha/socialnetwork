@@ -18,7 +18,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class CommentRepositoryTest {
 
     public static final long ID = 1L;
-    public static final long DEL_ID = 4L;
 
     @Autowired
     private DefaultCommentRepository commentRepository;

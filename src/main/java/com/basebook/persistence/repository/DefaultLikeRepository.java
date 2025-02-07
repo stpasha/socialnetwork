@@ -1,7 +1,6 @@
 package com.basebook.persistence.repository;
 
 import com.basebook.model.Like;
-import com.basebook.repository.LikeRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;

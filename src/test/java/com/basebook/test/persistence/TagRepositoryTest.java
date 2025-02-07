@@ -1,6 +1,7 @@
 package com.basebook.test.persistence;
 
 import com.basebook.annotations.BasebookTest;
+import com.basebook.model.Post;
 import com.basebook.model.Tag;
 import com.basebook.persistence.repository.DefaultTagRepository;
 import com.basebook.util.TestDataFactory;
@@ -18,6 +19,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @BasebookTest
 public class TagRepositoryTest {
 
+    public static final long ID = 1L;
+
     @Autowired
     private DefaultTagRepository tagRepository;
 
@@ -31,6 +34,11 @@ public class TagRepositoryTest {
     void setUp() {
         jdbcTemplate.execute("DELETE FROM tags");
         jdbcTemplate.execute("DELETE FROM post_tags");
+        jdbcTemplate.execute("DELETE FROM posts");
+        Post post = testDataFactory.createFakePost(ID);
+        jdbcTemplate.update("INSERT INTO posts (post_id, title, content, image_url, created_at, updated_at, is_deleted) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                post.getId(), post.getTitle(), post.getContent(), post.getImageUrl(), post.getCreatedAt(), post.getUpdatedAt(), post.isDeleted());
+
     }
 
     @Test
@@ -57,10 +65,11 @@ public class TagRepositoryTest {
     @Test
     void testFindTagByPost() {
         Tag tag = testDataFactory.createFakeTag();
+
         jdbcTemplate.execute("INSERT INTO tags (tag_id, name) VALUES (" + tag.getId() + ", '" + tag.getName() + "')");
         jdbcTemplate.execute("INSERT INTO post_tags (post_id, tag_id) VALUES (1, " + tag.getId() + ")");
 
-        List<Tag> tags = tagRepository.findTagByPost(1L);
+        List<Tag> tags = tagRepository.findTagByPost(ID);
         assertEquals(1, tags.size());
         assertEquals(tag.getName(), tags.get(0).getName());
     }

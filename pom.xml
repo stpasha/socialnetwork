@@ -156,6 +156,7 @@
 						<configuration>
 							<target>
 								<copy file="./target/basebook-${version}.jar" todir="."/>
+								<chmod file="./basebook-${version}.jar" perm="a+x"/>
 							</target>
 						</configuration>
 						<goals>

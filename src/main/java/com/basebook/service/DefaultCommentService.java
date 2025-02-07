@@ -2,7 +2,7 @@ package com.basebook.service;
 
 
 import com.basebook.model.Comment;
-import com.basebook.repository.CommentRepository;
+import com.basebook.persistence.repository.CommentRepository;
 import org.springframework.stereotype.Service;
 
 @Service

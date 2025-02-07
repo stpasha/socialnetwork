@@ -2,7 +2,7 @@ package com.basebook.service;
 
 import com.basebook.model.Post;
 import com.basebook.model.PostList;
-import com.basebook.repository.PostRepository;
+import com.basebook.persistence.repository.PostRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;

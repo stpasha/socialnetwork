@@ -1,7 +1,7 @@
 package com.basebook.service;
 
 import com.basebook.model.Tag;
-import com.basebook.repository.TagRepository;
+import com.basebook.persistence.repository.TagRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

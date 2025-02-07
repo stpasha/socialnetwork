@@ -5,10 +5,10 @@ import com.basebook.model.Comment;
 import com.basebook.model.Like;
 import com.basebook.model.Post;
 import com.basebook.model.PostList;
-import com.basebook.repository.CommentRepository;
-import com.basebook.repository.LikeRepository;
-import com.basebook.repository.PostRepository;
-import com.basebook.repository.TagRepository;
+import com.basebook.persistence.repository.CommentRepository;
+import com.basebook.persistence.repository.LikeRepository;
+import com.basebook.persistence.repository.PostRepository;
+import com.basebook.persistence.repository.TagRepository;
 import com.basebook.service.CommentService;
 import com.basebook.service.ImageService;
 import com.basebook.service.LikeService;
@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @BasebookTest
-public class DefaultPostServiceTest {
+public class DefaultServiceTest {
 
     @Autowired
     private PostService service;
@@ -230,10 +230,10 @@ public class DefaultPostServiceTest {
 
         @Test
         void shouldThrowExceptionWhenSaveFails() {
-            String fileName = "test-image.jpg";
+            String fileName = "/";
             byte[] data = new byte[]{1, 2, 3, 4};
-            //Exception exception = assertThrows(RuntimeException.class, () -> imageService.saveImage(fileName, data));
-            //assertEquals("Failed to save image", exception.getMessage());
+            Exception exception = assertThrows(RuntimeException.class, () -> imageService.saveImage(fileName, data));
+            assertEquals("Failed to save image", exception.getMessage());
         }
     }
 
@@ -265,7 +265,7 @@ public class DefaultPostServiceTest {
 
         @Test
         void shouldDeleteCommentSuccessfully() {
-            Long id = faker.number().randomNumber();
+            long id = faker.number().randomNumber();
             commentService.delete(id);
             verify(commentRepository, times(1)).delete(id);
         }

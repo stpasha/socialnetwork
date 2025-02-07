@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.time.LocalDateTime;
 
+import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
 @RequestMapping("/posts")
@@ -30,6 +31,6 @@ public class LikeController {
     public ResponseEntity<Long> like(@PathVariable("id") Long id) {
         log.info("Add a like to postId: {}", id);
         likeService.create(Like.builder().postId(id).createdAt(LocalDateTime.now()).build());
-        return new ResponseEntity<>(likeService.countLikesByPost(id), OK);
+        return new ResponseEntity<>(likeService.countLikesByPost(id), CREATED);
     }
 }

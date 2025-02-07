@@ -1,4 +1,4 @@
-package com.basebook.repository;
+package com.basebook.persistence.repository;
 
 import com.basebook.model.Comment;
 

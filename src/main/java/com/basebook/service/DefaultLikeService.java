@@ -1,7 +1,7 @@
 package com.basebook.service;
 
 import com.basebook.model.Like;
-import com.basebook.repository.LikeRepository;
+import com.basebook.persistence.repository.LikeRepository;
 import org.springframework.stereotype.Service;
 
 @Service

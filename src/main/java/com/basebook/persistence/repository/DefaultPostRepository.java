@@ -4,7 +4,6 @@ import com.basebook.model.Comment;
 import com.basebook.model.Like;
 import com.basebook.model.Post;
 import com.basebook.model.PostList;
-import com.basebook.repository.PostRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -20,7 +19,7 @@ import java.util.Set;
 public class DefaultPostRepository implements PostRepository {
 
     public static final String EMPTY_TAG = "-";
-    public static final String UPDATE = "UPDATE posts SET title = ?, content = ?, image_url = ?, updated_at = ?, is_deleted = ? WHERE post_id = ?";
+
     private final JdbcTemplate jdbcTemplate;
 
     public DefaultPostRepository(final JdbcTemplate jdbcTemplate) {
@@ -243,7 +242,9 @@ public class DefaultPostRepository implements PostRepository {
 
     @Override
     public void update(final Post post) {
-        jdbcTemplate.update(UPDATE,
+        jdbcTemplate.update("UPDATE posts " +
+                        " SET title = ?, content = ?, image_url = ?, updated_at = ?, is_deleted = ? " +
+                        " WHERE post_id = ?",
                 post.getTitle(),
                 post.getContent(),
                 post.getImageUrl(),
