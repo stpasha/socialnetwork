@@ -7,11 +7,10 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import static org.hamcrest.Matchers.containsString;
@@ -20,7 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @BasebookTest
-@WebAppConfiguration
+@AutoConfigureMockMvc
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class PostControllerIT {
 
@@ -30,11 +29,11 @@ public class PostControllerIT {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    @Autowired
     private MockMvc mockMvc;
 
     @BeforeEach
     void setUp() {
-        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
         jdbcTemplate.execute("DELETE FROM posts");
         jdbcTemplate.execute("DELETE FROM post_tags");
         jdbcTemplate.execute("""
