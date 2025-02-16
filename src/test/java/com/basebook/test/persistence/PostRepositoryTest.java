@@ -35,9 +35,9 @@ public class PostRepositoryTest {
     @Test
     @Order(1)
     void testSavePost() {
-        jdbcTemplate.execute("DELETE FROM posts");
+        jdbcTemplate.execute("DELETE FROM appdata.posts");
         Stream.of(testDataFactory.createFakePost(1L), testDataFactory.createFakePost(2L), testDataFactory.createFakePost(3L)).forEach(post -> postRepository.save(post));
-        long count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM posts", Long.class);
+        long count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM appdata.posts", Long.class);
         assertEquals(3, count);
     }
 
@@ -45,7 +45,7 @@ public class PostRepositoryTest {
     @Order(2)
     void testFindById() {
         Post post = testDataFactory.createFakePost(999L);
-        jdbcTemplate.update("INSERT INTO posts (post_id, title, content, image_url, created_at, updated_at, is_deleted) VALUES (?, ?, ?, ?, ?, ?, ?)",
+        jdbcTemplate.update("INSERT INTO appdata.posts (post_id, title, content, image_url, created_at, updated_at, is_deleted) VALUES (?, ?, ?, ?, ?, ?, ?)",
                 post.getId(), post.getTitle(), post.getContent(), post.getImageUrl(), post.getCreatedAt(), post.getUpdatedAt(), post.isDeleted());
 
         Optional<Post> foundPost = postRepository.findById(post.getId());
@@ -60,7 +60,7 @@ public class PostRepositoryTest {
         post.setTitle("Updated post");
         postRepository.update(post);
 
-        String updatedTitle = jdbcTemplate.queryForObject("SELECT title FROM posts WHERE post_id = ?", String.class, post.getId());
+        String updatedTitle = jdbcTemplate.queryForObject("SELECT title FROM appdata.posts WHERE post_id = ?", String.class, post.getId());
         assertEquals("Updated post", updatedTitle);
     }
 
@@ -69,7 +69,7 @@ public class PostRepositoryTest {
     void testDeletePost() {
         Post post = testDataFactory.createFakePost(999L);
         postRepository.delete(999L);
-        boolean isDeleted = jdbcTemplate.queryForObject("SELECT is_deleted FROM posts WHERE post_id = ?", Boolean.class, 999L);
+        boolean isDeleted = jdbcTemplate.queryForObject("SELECT is_deleted FROM appdata.posts WHERE post_id = ?", Boolean.class, 999L);
         assertEquals(true, isDeleted);
     }
 }

@@ -1,14 +1,15 @@
-#spring:
-#  datasource:
-#    initialization-mode: always
-#    url: jdbc:postgresql://localhost:5432/mydb
-#    username: user
-#    password: password
-#    driver-class-name: org.postgresql.Driver
 spring:
   datasource:
-    #    initialization-mode: always
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:devdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-    username: sa
-    password: ""
+#    initialization-mode: always
+    # Указываем имя контейнера в URL!
+    url: jdbc:postgresql://db:5432/basebook
+    username: baseadm
+    password: basepass
+    driver-class-name: org.postgresql.Driver
+#spring:
+#  datasource:
+#    #    initialization-mode: always
+#    driver-class-name: org.h2.Driver
+#    url: jdbc:h2:mem:devdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+#    username: sa
+#    password: ""

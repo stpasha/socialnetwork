@@ -25,13 +25,13 @@ public class DefaultTagRepository implements TagRepository {
 
     @Override
     public Optional<Tag> findById(final long id) {
-        return Optional.ofNullable(jdbcTemplate.queryForObject("SELECT * FROM tags WHERE tag_id = ?",
+        return Optional.ofNullable(jdbcTemplate.queryForObject("SELECT * FROM appdata.tags WHERE tag_id = ?",
                 tagRowMapper, id));
     }
 
     @Override
     public List<Tag> findAll() {
-        return jdbcTemplate.query("SELECT * FROM tags", tagRowMapper);
+        return jdbcTemplate.query("SELECT * FROM appdata.tags", tagRowMapper);
     }
 
     @Override
@@ -40,9 +40,9 @@ public class DefaultTagRepository implements TagRepository {
                         """
                             SELECT
                                 t.*
-                            FROM tags t
+                            FROM appdata.tags t
                             INNER JOIN
-                                post_tags pt
+                                appdata.post_tags pt
                             ON t.tag_id = pt.tag_id WHERE pt.post_id = ?
                             """,
                 tagRowMapper, postId);

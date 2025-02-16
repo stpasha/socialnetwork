@@ -9,8 +9,6 @@ import java.util.Optional;
 public interface PostService {
     Optional<Post> get(Long id);
 
-//    List<Post> getByTag(String name);
-
     void create(Post post);
 
     void update(Post post);

@@ -30,10 +30,10 @@ public class PostControllerIT {
 
     @BeforeEach
     void setUp() {
-        jdbcTemplate.execute("DELETE FROM posts");
-        jdbcTemplate.execute("DELETE FROM post_tags");
+        jdbcTemplate.execute("DELETE FROM appdata.posts");
+        jdbcTemplate.execute("DELETE FROM appdata.post_tags");
         jdbcTemplate.execute("""
-                INSERT INTO posts (post_id, title, content, image_url, created_at, updated_at, is_deleted) VALUES
+                INSERT INTO appdata.posts (post_id, title, content, image_url, created_at, updated_at, is_deleted) VALUES
                 (999, 'Почему программисты ненавидят понедельники?', 'Программист пришел в офис в понедельник и увидел, что 
                 его коллеги снова добавили десятки новых тасков. Он вздохнул и сказал: -Кажется, это мой код хочет 
                 провести реванш.- И начал писать рефакторинг.', '/uploads/images/1.jpeg', CURRENT_TIMESTAMP, 
@@ -42,7 +42,7 @@ public class PostControllerIT {
                 он сказал жене: -Теперь это не просто роутер, это — API для нашего интернета!-',
                  '/uploads/images/2.jpeg', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, FALSE)""");
         jdbcTemplate.execute("""
-                INSERT INTO post_tags (post_id, tag_id, is_deleted) VALUES
+                INSERT INTO appdata.post_tags (post_id, tag_id, is_deleted) VALUES
                 (999, 2, FALSE),
                 (1000, 3, FALSE)
                 """
