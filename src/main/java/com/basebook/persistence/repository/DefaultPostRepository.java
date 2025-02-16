@@ -117,7 +117,7 @@ public class DefaultPostRepository implements PostRepository {
 
     @Override
     public void save(final Post post) {
-        jdbcTemplate.update("INSERT INTO posts (title, content, image_url, created_at, updated_at, is_deleted) VALUES (?, ?, ?, ?, ?, ?)",
+        jdbcTemplate.update("INSERT INTO appdata.posts (title, content, image_url, created_at, updated_at, is_deleted) VALUES (?, ?, ?, ?, ?, ?)",
                 post.getTitle(), post.getContent(), post.getImageUrl(), post.getCreatedAt(), post.getUpdatedAt(), post.isDeleted());
     }
 
@@ -141,9 +141,9 @@ public class DefaultPostRepository implements PostRepository {
                             c.created_at AS ccreated_at,
                             c.updated_at AS cupdated_at,
                             c.is_deleted AS cis_deleted
-                        FROM posts p
-                            LEFT JOIN likes l ON p.post_id = l.post_id
-                            LEFT JOIN comments c ON p.post_id = c.post_id
+                        FROM appdata.posts p
+                            LEFT JOIN appdata.likes l ON p.post_id = l.post_id
+                            LEFT JOIN appdata.comments c ON p.post_id = c.post_id
                         WHERE p.post_id = ? AND p.is_deleted = FALSE
                         """, oneRowMapper, id).stream().findFirst();
     }
@@ -165,23 +165,23 @@ public class DefaultPostRepository implements PostRepository {
                                                 l.lcount,
                                                 c.ccount,
                                                 tag_names.concatenated_values
-                                            FROM posts p
+                                            FROM appdata.posts p
                                                 LEFT JOIN (
                                                     SELECT l.post_id, COUNT(l.like_id) AS lcount
-                                                    FROM likes l
+                                                    FROM appdata.likes l
                                                     WHERE l.is_deleted = FALSE
                                                     GROUP BY l.post_id
                                                 ) l ON p.post_id = l.post_id
                                                 LEFT JOIN (
                                                     SELECT c.post_id, COUNT(c.comment_id) AS ccount
-                                                    FROM comments c
+                                                    FROM appdata.comments c
                                                     WHERE c.is_deleted = FALSE
                                                     GROUP BY c.post_id
                                                 ) c ON p.post_id = c.post_id
                                                 LEFT JOIN (
-                                                    SELECT pt.post_id, LISTAGG(tags.name, ', ') AS concatenated_values
-                                                    FROM post_tags pt
-                                                    INNER JOIN tags ON pt.tag_id = tags.tag_id
+                                                    SELECT pt.post_id, STRING_AGG(tags.name, ', ') AS concatenated_values
+                                                    FROM appdata.post_tags pt
+                                                    INNER JOIN appdata.tags ON pt.tag_id = tags.tag_id
                                                     GROUP BY pt.post_id
                                                 ) tag_names ON p.post_id = tag_names.post_id
                                             WHERE  p.is_deleted = FALSE
@@ -203,32 +203,32 @@ public class DefaultPostRepository implements PostRepository {
                                         l.lcount,
                                         c.ccount,
                                         tag_names.concatenated_values
-                                    FROM posts p
+                                    FROM appdata.posts p
                                         LEFT JOIN (
                                             SELECT l.post_id, COUNT(l.like_id) AS lcount
-                                            FROM likes l
+                                            FROM appdata.likes l
                                             WHERE l.is_deleted = FALSE
                                             GROUP BY l.post_id
                                         ) l ON
                                             p.post_id = l.post_id
                                         LEFT JOIN (
                                             SELECT c.post_id, COUNT(c.comment_id) AS ccount
-                                            FROM comments c
+                                            FROM appdata.comments c
                                             WHERE c.is_deleted = FALSE
                                             GROUP BY c.post_id
                                         ) c ON
                                             p.post_id = c.post_id
                                         INNER JOIN
-                                            post_tags pt
+                                            appdata.post_tags pt
                                         ON
                                             p.post_id = pt.post_id
-                                        INNER JOIN tags t
+                                        INNER JOIN appdata.tags t
                                         ON
                                             pt.tag_id = t.tag_id
                                         LEFT JOIN (
-                                                    SELECT pt.post_id, LISTAGG(tags.name, ', ') AS concatenated_values
-                                                    FROM post_tags pt
-                                                    INNER JOIN tags ON pt.tag_id = tags.tag_id
+                                                    SELECT pt.post_id, STRING_AGG(tags.name, ', ') AS concatenated_values
+                                                    FROM appdata.post_tags pt
+                                                    INNER JOIN appdata.tags ON pt.tag_id = tags.tag_id
                                                     GROUP BY pt.post_id
                                                 ) tag_names ON p.post_id = tag_names.post_id
                                         WHERE t.name = ? AND p.is_deleted = FALSE
@@ -242,7 +242,7 @@ public class DefaultPostRepository implements PostRepository {
 
     @Override
     public void update(final Post post) {
-        jdbcTemplate.update("UPDATE posts " +
+        jdbcTemplate.update("UPDATE appdata.posts " +
                         " SET title = ?, content = ?, image_url = ?, updated_at = ?, is_deleted = ? " +
                         " WHERE post_id = ?",
                 post.getTitle(),
@@ -255,6 +255,6 @@ public class DefaultPostRepository implements PostRepository {
 
     @Override
     public void delete(final long id) {
-        jdbcTemplate.update("UPDATE posts SET is_deleted = TRUE WHERE post_id = ?", id);
+        jdbcTemplate.update("UPDATE appdata.posts SET is_deleted = TRUE WHERE post_id = ?", id);
     }
 }

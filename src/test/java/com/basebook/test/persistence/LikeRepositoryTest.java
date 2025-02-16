@@ -29,10 +29,10 @@ public class LikeRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        jdbcTemplate.execute("DELETE FROM likes");
-        jdbcTemplate.execute("DELETE FROM posts");
+        jdbcTemplate.execute("DELETE FROM appdata.likes");
+        jdbcTemplate.execute("DELETE FROM appdata.posts");
         Post post = testDataFactory.createFakePost(ID);
-        jdbcTemplate.update("INSERT INTO posts (post_id, title, content, image_url, created_at, updated_at, is_deleted) VALUES (?, ?, ?, ?, ?, ?, ?)",
+        jdbcTemplate.update("INSERT INTO appdata.posts (post_id, title, content, image_url, created_at, updated_at, is_deleted) VALUES (?, ?, ?, ?, ?, ?, ?)",
                 post.getId(), post.getTitle(), post.getContent(), post.getImageUrl(), post.getCreatedAt(), post.getUpdatedAt(), post.isDeleted());
     }
 
@@ -42,7 +42,7 @@ public class LikeRepositoryTest {
 
         likeRepository.save(like);
 
-        long count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM likes WHERE post_id = ?", Long.class, ID);
+        long count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM appdata.likes WHERE post_id = ?", Long.class, ID);
         assertEquals(1, count);
     }
 

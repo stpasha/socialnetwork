@@ -32,11 +32,11 @@ public class TagRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        jdbcTemplate.execute("DELETE FROM tags");
-        jdbcTemplate.execute("DELETE FROM post_tags");
-        jdbcTemplate.execute("DELETE FROM posts");
+        jdbcTemplate.execute("DELETE FROM appdata.tags");
+        jdbcTemplate.execute("DELETE FROM appdata.post_tags");
+        jdbcTemplate.execute("DELETE FROM appdata.posts");
         Post post = testDataFactory.createFakePost(ID);
-        jdbcTemplate.update("INSERT INTO posts (post_id, title, content, image_url, created_at, updated_at, is_deleted) VALUES (?, ?, ?, ?, ?, ?, ?)",
+        jdbcTemplate.update("INSERT INTO appdata.posts (post_id, title, content, image_url, created_at, updated_at, is_deleted) VALUES (?, ?, ?, ?, ?, ?, ?)",
                 post.getId(), post.getTitle(), post.getContent(), post.getImageUrl(), post.getCreatedAt(), post.getUpdatedAt(), post.isDeleted());
 
     }
@@ -44,7 +44,7 @@ public class TagRepositoryTest {
     @Test
     void testFindById() {
         Tag tag = testDataFactory.createFakeTag();
-        jdbcTemplate.execute("INSERT INTO tags (tag_id, name) VALUES (" + tag.getId() + ", '" + tag.getName() + "')");
+        jdbcTemplate.execute("INSERT INTO appdata.tags (tag_id, name) VALUES (" + tag.getId() + ", '" + tag.getName() + "')");
 
         Optional<Tag> foundTag = tagRepository.findById(tag.getId());
         assertTrue(foundTag.isPresent());
@@ -55,8 +55,8 @@ public class TagRepositoryTest {
     void testFindAll() {
         Tag tag1 = testDataFactory.createFakeTag();
         Tag tag2 = testDataFactory.createFakeTag();
-        jdbcTemplate.execute("INSERT INTO tags (tag_id, name) VALUES (" + tag1.getId() + ", '" + tag1.getName() + "')");
-        jdbcTemplate.execute("INSERT INTO tags (tag_id, name) VALUES (" + tag2.getId() + ", '" + tag2.getName() + "')");
+        jdbcTemplate.execute("INSERT INTO appdata.tags (tag_id, name) VALUES (" + tag1.getId() + ", '" + tag1.getName() + "')");
+        jdbcTemplate.execute("INSERT INTO appdata.tags (tag_id, name) VALUES (" + tag2.getId() + ", '" + tag2.getName() + "')");
 
         List<Tag> tags = tagRepository.findAll();
         assertEquals(2, tags.size());
@@ -66,8 +66,8 @@ public class TagRepositoryTest {
     void testFindTagByPost() {
         Tag tag = testDataFactory.createFakeTag();
 
-        jdbcTemplate.execute("INSERT INTO tags (tag_id, name) VALUES (" + tag.getId() + ", '" + tag.getName() + "')");
-        jdbcTemplate.execute("INSERT INTO post_tags (post_id, tag_id) VALUES (1, " + tag.getId() + ")");
+        jdbcTemplate.execute("INSERT INTO appdata.tags (tag_id, name) VALUES (" + tag.getId() + ", '" + tag.getName() + "')");
+        jdbcTemplate.execute("INSERT INTO appdata.post_tags (post_id, tag_id) VALUES (1, " + tag.getId() + ")");
 
         List<Tag> tags = tagRepository.findTagByPost(ID);
         assertEquals(1, tags.size());

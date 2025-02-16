@@ -30,10 +30,10 @@ public class CommentRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        jdbcTemplate.execute("DELETE FROM comments");
-        jdbcTemplate.execute("DELETE FROM posts");
+        jdbcTemplate.execute("DELETE FROM appdata.comments");
+        jdbcTemplate.execute("DELETE FROM appdata.posts");
         Post post = testDataFactory.createFakePost(ID);
-        jdbcTemplate.update("INSERT INTO posts (post_id, title, content, image_url, created_at, updated_at, is_deleted) VALUES (?, ?, ?, ?, ?, ?, ?)",
+        jdbcTemplate.update("INSERT INTO appdata.posts (post_id, title, content, image_url, created_at, updated_at, is_deleted) VALUES (?, ?, ?, ?, ?, ?, ?)",
                 post.getId(), post.getTitle(), post.getContent(), post.getImageUrl(), post.getCreatedAt(), post.getUpdatedAt(), post.isDeleted());
     }
 
@@ -41,7 +41,7 @@ public class CommentRepositoryTest {
     void testSaveComment() {
         Comment comment = testDataFactory.createFakeComment(ID);
         commentRepository.save(comment);
-        long count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM comments WHERE post_id = ?", Long.class, ID);
+        long count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM appdata.comments WHERE post_id = ?", Long.class, ID);
         assertEquals(1, count);
     }
 
@@ -50,9 +50,9 @@ public class CommentRepositoryTest {
         Comment comment = testDataFactory.createFakeComment(ID);
         commentRepository.save(comment);
         comment.setContent("Updated comment");
-        comment.setId(jdbcTemplate.queryForObject("SELECT comment_id FROM comments WHERE post_id = ?", Long.class, ID));
+        comment.setId(jdbcTemplate.queryForObject("SELECT comment_id FROM appdata.comments WHERE post_id = ?", Long.class, ID));
         commentRepository.update(comment);
-        String updatedContent = jdbcTemplate.queryForObject("SELECT content FROM comments WHERE comment_id = ?", String.class, comment.getId());
+        String updatedContent = jdbcTemplate.queryForObject("SELECT content FROM appdata.comments WHERE comment_id = ?", String.class, comment.getId());
         assertEquals("Updated comment", updatedContent);
     }
 
@@ -60,8 +60,8 @@ public class CommentRepositoryTest {
     void testDeleteComment() {
         Comment comment = testDataFactory.createFakeComment(ID);
         commentRepository.save(comment);
-        commentRepository.delete(jdbcTemplate.queryForObject("SELECT comment_id FROM comments WHERE post_id = ?", Long.class, ID));
-        boolean isDeleted = jdbcTemplate.queryForObject("SELECT is_deleted FROM comments WHERE post_id = ?", Boolean.class, ID);
+        commentRepository.delete(jdbcTemplate.queryForObject("SELECT comment_id FROM appdata.comments WHERE post_id = ?", Long.class, ID));
+        boolean isDeleted = jdbcTemplate.queryForObject("SELECT is_deleted FROM appdata.comments WHERE post_id = ?", Boolean.class, ID);
         assertEquals(true, isDeleted);
     }
 

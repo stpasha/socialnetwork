@@ -14,18 +14,9 @@ public class DefaultCommentRepository implements CommentRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private final RowMapper<Comment> commentRowMapper = (rs, rowNum) -> Comment.builder()
-            .id(rs.getLong("comment_id"))
-            .postId(rs.getLong("post_id"))
-            .content(rs.getString("content"))
-            .createdAt(rs.getTimestamp("created_at").toLocalDateTime())
-            .updatedAt(rs.getTimestamp("updated_at").toLocalDateTime())
-            .isDeleted(rs.getBoolean("is_deleted"))
-            .build();
-
     @Override
     public void save(final Comment comment) {
-        jdbcTemplate.update("INSERT INTO comments (post_id, content, created_at, updated_at, is_deleted) "
+        jdbcTemplate.update("INSERT INTO appdata.comments (post_id, content, created_at, updated_at, is_deleted) "
                         + "VALUES (?, ?, ?, ?, ?)",
                 comment.getPostId(),
                 comment.getContent(),
@@ -36,13 +27,13 @@ public class DefaultCommentRepository implements CommentRepository {
 
     @Override
     public void update(final Comment comment) {
-        jdbcTemplate.update("UPDATE comments SET content = ?, updated_at = ?, is_deleted = ? WHERE comment_id = ?",
+        jdbcTemplate.update("UPDATE appdata.comments SET content = ?, updated_at = ?, is_deleted = ? WHERE comment_id = ?",
                 comment.getContent(), comment.getUpdatedAt(), comment.isDeleted(), comment.getId());
     }
 
     @Override
     public void delete(final long id) {
-        jdbcTemplate.update("UPDATE comments SET  is_deleted = TRUE WHERE comment_id = ?", id);
+        jdbcTemplate.update("UPDATE appdata.comments SET  is_deleted = TRUE WHERE comment_id = ?", id);
     }
 
     @Override

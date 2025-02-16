@@ -31,17 +31,17 @@ public class CommentControllerIT {
 
     @BeforeEach
     void setUp() {
-        jdbcTemplate.execute("DELETE FROM comments");
-        jdbcTemplate.execute("DELETE FROM posts");
+        jdbcTemplate.execute("DELETE FROM appdata.comments");
+        jdbcTemplate.execute("DELETE FROM appdata.posts");
         jdbcTemplate.execute("""
-                INSERT INTO posts (post_id, title, content, image_url, created_at, updated_at, is_deleted) VALUES
+                INSERT INTO appdata.posts (post_id, title, content, image_url, created_at, updated_at, is_deleted) VALUES
                 (1001, 'Почему программисты ненавидят понедельники?', 'Программист пришел в офис в понедельник и увидел, что
                 его коллеги снова добавили десятки новых тасков. Он вздохнул и сказал: -Кажется, это мой код хочет
                 провести реванш.- И начал писать рефакторинг.', '/uploads/images/1.jpeg', CURRENT_TIMESTAMP,
                 CURRENT_TIMESTAMP, FALSE)
                 """);
         jdbcTemplate.execute("""
-                INSERT INTO comments (comment_id, post_id, content, created_at, updated_at, is_deleted) VALUES
+                INSERT INTO appdata.comments (comment_id, post_id, content, created_at, updated_at, is_deleted) VALUES
                 (1, 1001, 'This is a comment 1', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, FALSE),
                 (2, 1001, 'This is a comment 2', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, FALSE)
                 """);
