@@ -1,4 +1,6 @@
 spring:
   sql:
     init:
-      mode: embedded
+      mode: always
+  datasource:
+    driver-class-name: org.postgresql.Driver
