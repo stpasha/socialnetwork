@@ -38,7 +38,7 @@ public class DefaultCommentRepository implements CommentRepository {
 
     @Override
     public long countByPostId(final long postId) {
-        return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM comments WHERE post_id = ? AND is_deleted = FALSE",
+        return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM appdata.comments WHERE post_id = ? AND is_deleted = FALSE",
                 Long.class, postId);
     }
 }

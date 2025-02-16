@@ -41,9 +41,9 @@ public class CommentControllerIT {
                 CURRENT_TIMESTAMP, FALSE)
                 """);
         jdbcTemplate.execute("""
-                INSERT INTO appdata.comments (comment_id, post_id, content, created_at, updated_at, is_deleted) VALUES
-                (1, 1001, 'This is a comment 1', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, FALSE),
-                (2, 1001, 'This is a comment 2', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, FALSE)
+                INSERT INTO appdata.comments (post_id, content, created_at, updated_at, is_deleted) VALUES
+                (1001, 'This is a comment 1', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, FALSE),
+                (1001, 'This is a comment 2', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, FALSE)
                 """);
     }
 
